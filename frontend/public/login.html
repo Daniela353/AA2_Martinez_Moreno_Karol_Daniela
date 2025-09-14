@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - DM Smart Store</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #f8cdda, #fdaecb);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .login-container {
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0px 4px 20px rgba(0,0,0,0.2);
+      text-align: center;
+      width: 350px;
+    }
+
+    .login-container img {
+      width: 200px;
+      margin-bottom: 15px;
+    }
+
+    h2 {
+      margin-bottom: 20px;
+      color: #e75480;
+    }
+
+    input {
+      width: 90%;
+      padding: 10px;
+      margin: 8px 0;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+
+    button {
+      background: #e75480;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 10px;
+      width: 100%;
+    }
+
+    button:hover {
+      background: #d13a67;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <img src="imagenes/logo.png" alt="Logo DM Smart Store">
+    <h2>Iniciar Sesión</h2>
+    <form id="loginForm">
+      <input type="email" id="correo" placeholder="Correo" required>
+      <input type="password" id="password" placeholder="Contraseña" required>
+      <button type="submit">Ingresar</button>
+    </form>
+  </div>
+
+  <script>
+    document.getElementById("loginForm").addEventListener("submit", function(event) {
+      event.preventDefault();
+
+      const correo = document.getElementById("correo").value;
+      const password = document.getElementById("password").value;
+
+      fetch("data/usuarios.json")
+        .then(response => {
+          if (!response.ok) throw new Error("No se pudo cargar usuarios.json");
+          return response.json();
+        })
+        .then(usuarios => {
+          const usuario = usuarios.find(u => u.email === correo && u.password === password);
+
+          if (usuario) {
+            // Guardamos el usuario en localStorage
+            localStorage.setItem("usuarioActivo", JSON.stringify(usuario));
+
+            alert(`Bienvenido, ${usuario.nombre} (${usuario.rol})`);
+
+            if (usuario.rol === "Administrador") {
+              window.location.href = "admin.html";
+            } else if (usuario.rol === "Cliente") {
+              window.location.href = "cliente.html";
+            }
+          } else {
+            alert("Usuario o contraseña incorrectos");
+          }
+        })
+        .catch(error => {
+          console.error("Error cargando usuarios:", error);
+          alert("Error al cargar usuarios.json");
+        });
+    });
+  </script>
+</body>
+</html>

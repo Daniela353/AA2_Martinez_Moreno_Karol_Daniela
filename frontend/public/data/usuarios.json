@@ -1,0 +1,16 @@
+[
+  {
+    "id": 1,
+    "nombre": "Administrador",
+    "email": "admin@tienda.com",
+    "password": "1234",
+    "rol": "Administrador"
+  },
+  {
+    "id": 2,
+    "nombre": "Juan Pérez",
+    "email": "cliente@correo.com",
+    "password": "5678",
+    "rol": "Cliente"
+  }
+]

@@ -1,0 +1,7 @@
+[
+  { "nombre_categoria": "Tecnologia", "descripcion": "Dispositivos electronicos y gadgets" },
+  { "nombre_categoria": "Electrodomesticos", "descripcion": "Productos para el hogar" },
+  { "nombre_categoria": "Audio", "descripcion": "Altavoces, auriculares y equipos de sonido" },
+  { "nombre_categoria": "Video", "descripcion": "Televisores, proyectores y monitores" },
+  { "nombre_categoria": "Hogar", "descripcion": "Articulos y muebles para el hogar" }
+]

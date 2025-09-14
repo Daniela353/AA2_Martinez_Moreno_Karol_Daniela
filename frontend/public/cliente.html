@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cliente - DM Smart Store</title>
+<style>
+  body { margin:0; font-family: Arial, sans-serif; background: #f9f9fb; display:flex; min-height:100vh; }
+  
+  header { 
+    width:100%; 
+    text-align:center; 
+    background:#e75480; 
+    color:white; 
+    padding:20px; 
+    font-size:1.5rem; 
+    font-weight:bold; 
+    position: fixed; 
+    top:0; 
+    left:0; 
+    z-index:1000;
+  }
+
+  .sidebar {
+    width:240px;
+    background:#ffc0cb; 
+    padding:20px;
+    box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+    display:flex;
+    flex-direction: column;
+    align-items:center;
+    position: fixed;
+    top:70px; 
+    bottom:0;
+  }
+
+  .sidebar img { width:140px; margin-bottom:15px; }
+  .sidebar .slogan { text-align:center; font-size:1rem; margin-bottom:20px; font-weight:bold; }
+  .sidebar nav a { display:block; text-decoration:none; color:#333; margin:12px 0; font-weight:bold; font-size:1.1rem; }
+  .sidebar nav a:hover { color:#e75480; }
+  .logout-btn { margin-top:15px; padding:8px 12px; background:#e75480; color:white; border:none; border-radius:5px; cursor:pointer; font-size:1rem; }
+
+  main { 
+    flex:1; 
+    margin-left: 240px; 
+    padding-top:90px; 
+    display:flex; 
+    flex-direction: column; 
+    align-items:center;
+  }
+
+  #filtros { margin-bottom:15px; text-align:center; }
+  #busqueda, #filtroMarca { padding:5px 10px; border-radius:5px; border:1px solid #ddd; margin-right:5px; }
+
+  #contenido {
+    display:flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .producto {
+    background:white;
+    padding:15px;
+    margin:15px;
+    border-radius:10px;
+    box-shadow:0 4px 10px rgba(0,0,0,0.1);
+    width:220px;
+    text-align:center;
+    cursor:pointer;
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .producto img {
+    width:220px;
+    height:220px;
+    object-fit: contain;
+    border-radius:10px;
+    margin-bottom:10px;
+  }
+
+  .btn-comprar { background:#e75480; color:white; border:none; padding:8px 12px; border-radius:8px; cursor:pointer; margin-top:10px; font-weight:bold; }
+  .btn-comprar:hover { background:#d13a67; }
+
+  /* Modal detalles */
+  .modal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); justify-content:center; align-items:center; z-index:1000; }
+  .modal-content { background:white; padding:20px; border-radius:10px; max-width:600px; width:90%; position:relative; overflow-y:auto; max-height:90vh; }
+  .close { position:absolute; top:10px; right:15px; font-size:1.5rem; cursor:pointer; }
+  .detalles-img { width:100px; margin:5px; cursor:pointer; border-radius:5px; border:2px solid transparent; }
+  .detalles-img.selected { border-color:#e75480; }
+  #detalle-principal { width:100%; border-radius:10px; margin-bottom:10px; }
+
+  #detalle-comentarios { margin-top:15px; }
+  #comentarios-list { max-height:150px; overflow-y:auto; border:1px solid #ddd; padding:10px; border-radius:5px; background:#f9f9fb; }
+  #nuevo-comentario { width:100%; margin-top:5px; border-radius:5px; padding:5px; }
+  #btn-agregar-comentario { margin-top:5px; background:#e75480; color:white; border:none; padding:5px 10px; border-radius:5px; cursor:pointer; }
+
+  /* Contacto dentro de cliente */
+  .contact-container { background:white; border-radius:15px; padding:40px 30px; box-shadow:0 6px 15px rgba(0,0,0,0.1); max-width:600px; width:100%; text-align:center; }
+
+  input, textarea { width:100%; padding:10px; margin-top:5px; border:1px solid #ff69b4; border-radius:8px; font-size:1rem; }
+  textarea { resize: vertical; min-height:100px; }
+  button.contact-btn { margin-top:20px; background:#ff69b4; color:white; border:none; padding:10px 20px; border-radius:10px; font-size:1rem; font-weight:bold; cursor:pointer; transition: all 0.3s ease; display:block; margin-left:auto; margin-right:auto; }
+  button.contact-btn:hover { background:#d13a67; transform: translateY(-2px); }
+
+  .mensaje-enviado { margin-top:15px; text-align:center; font-weight:bold; color:green; display:none; }
+
+  @media (max-width:768px){
+    .sidebar { display:none; }
+    main { margin-left:0; padding-top:100px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  DM Smart Store - Cliente
+  <button class="logout-btn" onclick="cerrarSesion()" style="position:absolute; right:20px; top:25px;">Cerrar Sesión</button>
+</header>
+
+<aside class="sidebar">
+  <img src="imagenes/logo.png" alt="Logo">
+  <p class="slogan">✨ La tecnología a tu alcance ✨</p>
+  <h2>Menú</h2>
+  <nav>
+    <a href="#" onclick="cargarInicio()">Inicio</a>
+    <a href="#" onclick="cargarDispositivos()">Dispositivos</a>
+    <a href="#" onclick="cargarOfertas()">Ofertas</a>
+    <a href="#" onclick="cargarContacto()">Contacto</a>
+  </nav>
+</aside>
+
+<main>
+  <h2 id="bienvenida"></h2>
+
+  <div id="filtros">
+    <input type="text" id="busqueda" placeholder="Buscar producto...">
+    <select id="filtroMarca"><option value="">Todas las marcas</option></select>
+  </div>
+
+  <div id="contenido"></div>
+</main>
+
+<!-- Modal -->
+<div id="modal" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="cerrarModal()">&times;</span>
+    <h3 id="detalle-nombre"></h3>
+    <img id="detalle-principal" src="" alt="">
+    <div id="detalle-adicionales"></div>
+    <p id="detalle-precio" style="font-weight:bold; margin-top:10px;"></p>
+    <p id="detalle-fecha"></p>
+    <p id="detalle-reseñas"></p>
+
+    <div id="detalle-comentarios">
+      <h4>Comentarios:</h4>
+      <div id="comentarios-list"></div>
+      <textarea id="nuevo-comentario" placeholder="Escribe tu comentario..."></textarea>
+      <button id="btn-agregar-comentario">Agregar comentario</button>
+    </div>
+
+    <button class="btn-comprar" id="btn-comprar-modal" style="margin-top:15px;">Comprar</button>
+  </div>
+</div>
+
+<script>
+const bienvenida = document.getElementById("bienvenida");
+const contenido = document.getElementById("contenido");
+const filtrosDiv = document.getElementById("filtros");
+const modal = document.getElementById("modal");
+const detalleNombre = document.getElementById("detalle-nombre");
+const detallePrincipal = document.getElementById("detalle-principal");
+const detalleAdicionales = document.getElementById("detalle-adicionales");
+const detallePrecio = document.getElementById("detalle-precio");
+const detalleFecha = document.getElementById("detalle-fecha");
+const detalleReseñas = document.getElementById("detalle-reseñas");
+const btnComprar = document.getElementById("btn-comprar-modal");
+
+let productosGlobal = [];
+
+// Verificar usuario
+const usuarioActivo = JSON.parse(localStorage.getItem("usuarioActivo"));
+if(!usuarioActivo || usuarioActivo.rol !== "Cliente") {
+  alert("Debes iniciar sesión como cliente.");
+  window.location.href = "login.html";
+} else {
+  bienvenida.innerText = `Bienvenido, ${usuarioActivo.nombre} 👋`;
+  cargarInicio();
+}
+
+function cerrarSesion() {
+  localStorage.removeItem("usuarioActivo");
+  window.location.href = "login.html";
+}
+
+// Mostrar productos
+function actualizarProductos() {
+  const busquedaTexto = document.getElementById("busqueda").value.toLowerCase();
+  const filtroMarca = document.getElementById("filtroMarca").value;
+  contenido.innerHTML = '';
+  const filtrados = productosGlobal.filter(prod => {
+    const nombreMatch = prod.nombre.toLowerCase().includes(busquedaTexto);
+    const marcaMatch = filtroMarca ? prod.marca === filtroMarca : true;
+    return nombreMatch && marcaMatch;
+  });
+
+  filtrados.forEach(prod => {
+    const div = document.createElement("div");
+    div.classList.add("producto");
+    const etiquetaOferta = prod.precio_final ? `<span style="color:#e75480;font-weight:bold;">OFERTA</span><br>` : '';
+    const reseñas = prod.resena ? `⭐ ${prod.resena}` : '';
+    const precio = prod.precio_final ? '$' + prod.precio_final.toLocaleString() : '$' + prod.precio.toLocaleString();
+
+    div.innerHTML = `
+      <img src="${prod.imagen}" alt="${prod.nombre}">
+      <h3>${prod.nombre}</h3>
+      <p>${etiquetaOferta}${precio}</p>
+      <p>📅 ${prod.fecha_lanzamiento}</p>
+      <p>${reseñas}</p>
+      <button class="btn-comprar">Comprar</button>
+    `;
+
+    div.querySelector("img").addEventListener("click", () => mostrarDetalle(prod));
+    div.querySelector(".btn-comprar").addEventListener("click", () => alert(`Has comprado: ${prod.nombre}\nPrecio: ${precio}`));
+
+    contenido.appendChild(div);
+  });
+}
+
+function mostrarProductos(data) {
+  productosGlobal = data;
+
+  const selectMarca = document.getElementById("filtroMarca");
+  selectMarca.innerHTML = '<option value="">Todas las marcas</option>';
+  const marcas = [...new Set(data.map(p => p.marca))];
+  marcas.forEach(m => {
+    const option = document.createElement("option");
+    option.value = m;
+    option.text = m;
+    selectMarca.appendChild(option);
+  });
+
+  filtrosDiv.style.display = 'block';
+  document.getElementById("busqueda").addEventListener("input", actualizarProductos);
+  selectMarca.addEventListener("change", actualizarProductos);
+
+  actualizarProductos();
+}
+
+// Secciones
+function cargarInicio() {
+  filtrosDiv.style.display = 'block';
+  fetch("data/dispositivos.json")
+    .then(res => res.json())
+    .then(data => mostrarProductos(data))
+    .catch(err => contenido.innerHTML = "<p style='color:red;'>Error cargando productos.</p>");
+}
+
+function cargarDispositivos() { cargarInicio(); }
+
+function cargarOfertas() {
+  filtrosDiv.style.display = 'block';
+  fetch("data/ofertas.json")
+    .then(res => res.json())
+    .then(data => mostrarProductos(data))
+    .catch(err => contenido.innerHTML = "<p style='color:red;'>Error cargando ofertas.</p>");
+}
+
+function cargarContacto() {
+  filtrosDiv.style.display = 'none';
+  const html = `
+    <div class="contact-container">
+      <h2>Contacto</h2>
+      <p>Hola 👋, envíanos tu mensaje usando el siguiente formulario:</p>
+      <form id="form-contacto">
+        <label>Nombre:</label>
+        <input type="text" placeholder="Tu nombre" required>
+        <label>Correo:</label>
+        <input type="email" placeholder="Tu correo" required>
+        <label>Mensaje:</label>
+        <textarea placeholder="Escribe tu mensaje" required></textarea>
+        <button type="submit" class="contact-btn">Enviar</button>
+        <div class="mensaje-enviado" id="mensaje-enviado">¡Mensaje enviado con éxito! ✅</div>
+      </form>
+    </div>
+  `;
+  contenido.innerHTML = html;
+
+  const form = document.getElementById("form-contacto");
+  const mensajeExito = document.getElementById("mensaje-enviado");
+  form.addEventListener("submit", function(e){
+    e.preventDefault();
+    mensajeExito.style.display = "block";
+    form.reset();
+    setTimeout(() => { mensajeExito.style.display = "none"; }, 3000);
+  });
+}
+
+// Modal detalles
+function mostrarDetalle(prod) {
+  detalleNombre.innerText = prod.nombre;
+  detallePrincipal.src = prod.imagen;
+  detallePrecio.innerText = prod.precio_final ? 'Oferta: $' + prod.precio_final.toLocaleString() : '$' + prod.precio.toLocaleString();
+  detalleFecha.innerText = `📅 ${prod.fecha_lanzamiento}`;
+  detalleReseñas.innerText = prod.resena || '';
+
+  detalleAdicionales.innerHTML = '';
+  if(prod.fotos && prod.fotos.length>0){
+    prod.fotos.forEach(img=>{
+      const im = document.createElement("img");
+      im.src = img;
+      im.classList.add("detalles-img");
+      im.addEventListener("click", ()=>{
+        detallePrincipal.src = img;
+        document.querySelectorAll(".detalles-img").forEach(i=>i.classList.remove("selected"));
+        im.classList.add("selected");
+      });
+      detalleAdicionales.appendChild(im);
+    });
+  }
+
+  btnComprar.onclick = ()=> {
+    alert(`Has comprado: ${prod.nombre}\nPrecio: ${detallePrecio.innerText}`);
+    cerrarModal();
+  };
+
+  const comentariosList = document.getElementById("comentarios-list");
+  const nuevoComentario = document.getElementById("nuevo-comentario");
+  const btnAgregarComentario = document.getElementById("btn-agregar-comentario");
+
+  comentariosList.innerHTML = '';
+  if(prod.comentarios && prod.comentarios.length>0){
+    prod.comentarios.forEach(c=>{
+      const p = document.createElement("p");
+      p.style.borderBottom = "1px solid #ddd";
+      p.style.padding = "2px 0";
+      p.innerText = c;
+      comentariosList.appendChild(p);
+    });
+  } else {
+    comentariosList.innerHTML = "<p style='color:#888;'>No hay comentarios aún.</p>";
+  }
+
+  btnAgregarComentario.onclick = ()=>{
+    const texto = nuevoComentario.value.trim();
+    if(texto){
+      if(!prod.comentarios) prod.comentarios=[];
+      prod.comentarios.push(texto);
+      const p = document.createElement("p");
+      p.style.borderBottom = "1px solid #ddd";
+      p.style.padding = "2px 0";
+      p.innerText = texto;
+      comentariosList.appendChild(p);
+      nuevoComentario.value='';
+    }
+  };
+
+  modal.style.display = "flex";
+}
+
+function cerrarModal(){ modal.style.display="none"; }
+</script>
+
+</body>
+</html>

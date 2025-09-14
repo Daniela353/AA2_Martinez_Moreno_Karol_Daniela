@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dispositivos Inteligentes</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&family=Pacifico&display=swap" rel="stylesheet">
+<style>
+body {
+  font-family: 'Montserrat', sans-serif;
+  background-color: #fff5f8;
+  margin: 0;
+  display: flex;
+}
+
+/* Sidebar */
+.sidebar { width: 240px; background-color: #d88ab1; color: white; height: 100vh; position: fixed; top: 0; left: 0; display: flex; flex-direction: column; align-items: center; padding: 1rem; }
+.sidebar img { width: 200px; margin-bottom: 0.8rem; background: white; padding: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.2); }
+.slogan { font-size: 1rem; font-style: italic; color: #ffe4f1; margin-bottom: 1.5rem; text-align: center; }
+.sidebar h2 { font-family: 'Pacifico', cursive; margin: 0.5rem 0 1rem 0; font-size: 1.4rem; }
+.sidebar nav a { color: white; text-decoration: none; display: block; padding: 0.6rem; border-radius: 8px; margin: 0.4rem 0; transition: background 0.3s; text-align: center; font-weight: 600; }
+.sidebar nav a:hover { background: #ffb6c1; }
+
+/* Main content */
+.main-content { margin-left: 240px; flex: 1; display: flex; flex-direction: column; min-height: 100vh; }
+header { background-color: #ffb6c1; color: white; text-align: center; padding: 1rem; border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; }
+.filters { display: flex; justify-content: center; gap: 1rem; margin: 1rem 0; }
+.filters input, .filters select { padding: 0.5rem; border-radius: 8px; border: 1px solid #ff69b4; }
+main { display: flex; flex-wrap: wrap; justify-content: center; padding: 2rem 1rem; gap: 1.5rem; }
+
+/* Tarjetas */
+.device-card { background-color: #fff; border-radius: 15px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); width: 230px; text-align: center; padding: 1rem; transition: transform 0.3s, box-shadow 0.3s; cursor: pointer; position: relative; }
+.device-card:hover { transform: translateY(-7px); box-shadow: 0 6px 12px rgba(0,0,0,0.2); }
+.device-card img { width: 100%; border-radius: 10px; margin-bottom: 0.8rem; }
+.device-card h3 { margin: 0.5rem 0; color: #ff69b4; }
+.precio { font-weight: 600; margin: 0.3rem 0; }
+.precio-original { text-decoration: line-through; color: #888; font-size: 0.9rem; }
+.precio-descuento { font-weight: 600; color: #ff69b4; margin-left: 5px; }
+.oferta-badge { position: absolute; top: 10px; right: 10px; background-color: red; color: white; padding: 5px 10px; border-radius: 8px; font-weight: bold; font-size: 0.85rem; z-index: 10; }
+
+/* Modal */
+.modal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(255,240,245,0.95); justify-content: center; align-items: center; overflow-y: auto; z-index:1000; }
+.modal-content { background:white; padding:2rem; border-radius:15px; max-width:600px; width:90%; text-align:center; position: relative; }
+.close { position:absolute; top:10px; right:15px; font-size:1.5rem; cursor:pointer; color:#d88ab1; }
+
+/* Carrusel */
+#galeria { display: flex; align-items: center; justify-content: center; gap: 1rem; margin-bottom: 1rem; }
+#galeria button { background: #ff69b4; color: white; border: none; border-radius: 50%; width: 35px; height: 35px; font-size: 1.2rem; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+#fotoActual { max-width: 80%; border-radius: 10px; }
+
+/* Comentarios */
+.comentarios { text-align:left; margin-top:1rem; max-height:200px; overflow-y:auto; border-top:1px solid #ccc; padding-top:0.5rem; }
+.comentario { background:#ffe4f1; margin:5px 0; padding:5px 10px; border-radius:10px; }
+.input-comentario { display:flex; gap:5px; margin-top:1rem; }
+.input-comentario input { flex:1; padding:0.5rem; border-radius:8px; border:1px solid #ff69b4; }
+.input-comentario button { padding:0.5rem 1rem; border:none; border-radius:8px; background:#ff69b4; color:white; cursor:pointer; }
+</style>
+</head>
+<body>
+
+<aside class="sidebar">
+  <img src="imagenes/logo.png" alt="Logo">
+  <p class="slogan">✨ La tecnología a tu alcance ✨</p>
+  <h2>Menú</h2>
+  <nav>
+    <a href="index.html">Inicio</a>
+    <a href="devices.html">Dispositivos</a>
+    <a href="ofertas.html">Ofertas</a>
+    <a href="contacto.html">Contacto</a>
+    <a href="login.html" id="loginLink">Iniciar Sesión</a>
+    <button class="logout-btn" id="logoutBtn" onclick="logout()">Cerrar sesión</button>
+  </nav>
+</aside>
+<div class="main-content">
+  <header>
+    <h1>Dispositivos Inteligentes</h1>
+  </header>
+
+  <div class="filters">
+    <input type="text" id="busqueda" placeholder="Buscar dispositivo...">
+    <select id="filtroMarca">
+      <option value="">Todas las marcas</option>
+      <option value="Dell">Dell</option>
+      <option value="Samsung">Samsung</option>
+      <option value="Xiaomi">Xiaomi</option>
+      <option value="Apple">Apple</option>
+      <option value="Hisense">Hisense</option>
+      <option value="Amazon Echo">Amazon Echo</option>
+    </select>
+  </div>
+
+  <main id="device-list"></main>
+</div>
+
+<!-- Modal -->
+<div id="deviceModal" class="modal">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <div id="galeria">
+      <button id="prevFoto">&lt;</button>
+      <img id="fotoActual" src="" alt="">
+      <button id="nextFoto">&gt;</button>
+    </div>
+    <h2 id="modal-title"></h2>
+    <p id="modal-marca"></p>
+    <p id="modal-tipo"></p>
+    <p id="modal-precio"></p>
+    <p id="modal-lanzamiento"></p>
+    <p id="modal-descripcion"></p>
+    <div class="comentarios" id="comentarios"></div>
+    <div class="input-comentario">
+      <input type="text" id="nuevo-comentario" placeholder="Agregar un comentario...">
+      <button id="btn-comentar">Comentar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const dispositivosIndex = [
+  { id:1, nombre:"Laptop Intel Core i7", marca:"Dell", tipo:"Laptop", precio:2480000, fecha_lanzamiento:"2023-03-10", resena:"Potente y ligera, ideal para multitarea.", imagen:"imagenes/Laptop_Intel_Core_i7.png", fotos:["imagenes/Laptop_Intel_Core_i7.png","imagenes/Laptop_Intel_Core_i7_2.png"], comentarios:[], oferta:true, precio_descuento:2232000 },
+  { id:2, nombre:"Smartphone Galaxy S25", marca:"Samsung", tipo:"Smartphone", precio:2800000, fecha_lanzamiento:"2025-08-15", resena:"Gran pantalla y cámara excelente.", imagen:"imagenes/Smartphone Galaxy S25.png", fotos:["imagenes/Smartphone Galaxy S25.png"], comentarios:[], oferta:true, precio_descuento:2380000 },
+  { id:3, nombre:"iPhone 15 Pro", marca:"Apple", tipo:"Smartphone", precio:5000000, fecha_lanzamiento:"2025-09-01", resena:"Alta gama, cámara profesional.", imagen:"imagenes/iPhone 15 Pro.jpg", fotos:["imagenes/iPhone 15 Pro.jpg"], comentarios:[], oferta:true, precio_descuento:4000000 },
+  { id:4, nombre:"Televisor HISENSE 50 pulgadas LED UHD 4K 50A6N", marca:"Hisense", tipo:"Televisor", precio:1800000, fecha_lanzamiento:"2024-07-20", resena:"Imagen nítida y sonido potente.", imagen:"imagenes/Hisense_Smart_TV_50.webp", fotos:["imagenes/Hisense_Smart_TV_50.webp"], comentarios:[], oferta:true, precio_descuento:1476000 },
+  { id:5, nombre:"Altavoz inteligente Alexa Echo Dot 5ta generación", marca:"Amazon Echo", tipo:"Altavoz", precio:400000, fecha_lanzamiento:"2025-01-15", resena:"Compacto y potente.", imagen:"imagenes/Amazon_Echo_Dot.webp", fotos:["imagenes/Amazon_Echo_Dot.webp"], comentarios:[], oferta:true, precio_descuento:340000 },
+  { id:6, nombre:"Oppo Reno 12 F 5G", marca:"Oppo", tipo:"Smartphone", precio:1500000, fecha_lanzamiento:"2024-11-10", resena:"Rendimiento equilibrado y buena cámara.", imagen:"imagenes/Oppo_Reno_12.png", fotos:["imagenes/Oppo_Reno_12.png"], comentarios:[], oferta:false },
+  { id:7, nombre:"Parlante Inalámbrico VTA 25W Sphere Beat", marca:"VTA", tipo:"Altavoz Inteligente", precio:500000, fecha_lanzamiento:"2023-05-05", resena:"Sonido claro y potente.", imagen:"imagenes/VTA_Smart_Speaker.png", fotos:["imagenes/VTA_Smart_Speaker.png"], comentarios:[], oferta:false },
+  { id:8, nombre:"Estación Inteligente", marca:"LifeSmart Colombia", tipo:"Domótica", precio:350000, fecha_lanzamiento:"2024-01-20", resena:"Controla todos tus dispositivos desde un solo hub.", imagen:"imagenes/LifeSmart_Home_Hub.png", fotos:["imagenes/LifeSmart_Home_Hub.png"], comentarios:[], oferta:false }
+];
+
+const container = document.getElementById('device-list');
+const busquedaInput = document.getElementById('busqueda');
+const filtroMarca = document.getElementById('filtroMarca');
+
+const modal = document.getElementById('deviceModal');
+const closeBtn = document.querySelector('.close');
+const fotoActual = document.getElementById('fotoActual');
+const prevFotoBtn = document.getElementById('prevFoto');
+const nextFotoBtn = document.getElementById('nextFoto');
+const comentariosDiv = document.getElementById('comentarios');
+const nuevoComentarioInput = document.getElementById('nuevo-comentario');
+const btnComentar = document.getElementById('btn-comentar');
+
+let fotosActuales = [];
+let indiceFoto = 0;
+let dispositivoActual = null;
+
+// Mostrar dispositivos
+function mostrarDispositivos(dispositivos){
+    container.innerHTML = '';
+    dispositivos.forEach(d => {
+        const card = document.createElement('div');
+        card.classList.add('device-card');
+        card.onclick = () => abrirModal(d);
+
+        let html = '';
+        if(d.oferta){
+            html += `<div class="oferta-badge">OFERTA</div>`;
+        }
+
+        html += `
+            <img src="${d.imagen}" alt="${d.nombre}">
+            <h3>${d.nombre}</h3>
+            <p>Marca: ${d.marca}</p>
+            <p>Tipo: ${d.tipo}</p>
+            <p>Lanzamiento: ${d.fecha_lanzamiento}</p>
+        `;
+
+        if(d.oferta){
+            html += `<p class="precio-original">$${d.precio.toLocaleString()}</p>
+                     <p class="precio-descuento">$${d.precio_descuento.toLocaleString()}</p>`;
+        } else {
+            html += `<p class="precio">$${d.precio.toLocaleString()}</p>`;
+        }
+
+        card.innerHTML = html;
+        container.appendChild(card);
+    });
+}
+
+// Abrir modal
+function abrirModal(d){
+    dispositivoActual = d;
+    fotosActuales = d.fotos || [d.imagen];
+    indiceFoto = 0;
+    fotoActual.src = fotosActuales[indiceFoto];
+
+    document.getElementById('modal-title').textContent = d.nombre;
+    document.getElementById('modal-marca').textContent = `Marca: ${d.marca}`;
+    document.getElementById('modal-tipo').textContent = `Tipo: ${d.tipo}`;
+    document.getElementById('modal-precio').textContent = d.oferta
+        ? `Precio: $${d.precio_descuento.toLocaleString()} (Antes: $${d.precio.toLocaleString()})`
+        : `Precio: $${d.precio.toLocaleString()}`;
+    document.getElementById('modal-lanzamiento').textContent = `Lanzamiento: ${d.fecha_lanzamiento || 'N/A'}`;
+    document.getElementById('modal-descripcion').textContent = d.resena || '';
+
+    mostrarComentarios(d);
+    btnComentar.onclick = () => agregarComentario(d);
+
+    modal.style.display = 'flex';
+    document.body.style.overflow = 'hidden'; // Bloquear scroll de fondo
+}
+
+// Carrusel
+prevFotoBtn.onclick = () => {
+    if(fotosActuales.length === 0) return;
+    indiceFoto = (indiceFoto - 1 + fotosActuales.length) % fotosActuales.length;
+    fotoActual.src = fotosActuales[indiceFoto];
+}
+nextFotoBtn.onclick = () => {
+    if(fotosActuales.length === 0) return;
+    indiceFoto = (indiceFoto + 1) % fotosActuales.length;
+    fotoActual.src = fotosActuales[indiceFoto];
+}
+
+// Comentarios
+function mostrarComentarios(d){
+    comentariosDiv.innerHTML = '';
+    if(!d.comentarios) d.comentarios=[];
+    d.comentarios.forEach(c=>{
+        const div = document.createElement('div');
+        div.classList.add('comentario');
+        div.textContent = c;
+        comentariosDiv.appendChild(div);
+    });
+}
+
+function agregarComentario(d){
+    const texto = nuevoComentarioInput.value.trim();
+    if(!texto) return;
+    d.comentarios.push(texto);
+    nuevoComentarioInput.value='';
+    mostrarComentarios(d);
+}
+
+// Cerrar modal
+closeBtn.onclick = ()=>{
+    modal.style.display='none';
+    document.body.style.overflow='auto';
+}
+window.onclick = (e)=>{
+    if(e.target === modal){
+        modal.style.display='none';
+        document.body.style.overflow='auto';
+    }
+}
+
+// Filtrado
+busquedaInput.addEventListener('input', filtrarDispositivos);
+filtroMarca.addEventListener('change', filtrarDispositivos);
+
+function filtrarDispositivos(){
+    const busqueda = busquedaInput.value.toLowerCase();
+    const marca = filtroMarca.value;
+    const filtrados = dispositivosIndex.filter(d => 
+        d.nombre.toLowerCase().includes(busqueda) && (marca === '' || d.marca === marca)
+    );
+    mostrarDispositivos(filtrados);
+}
+
+// Inicial
+mostrarDispositivos(dispositivosIndex);
+</script>
+
+</body>
+</html>

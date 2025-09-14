@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ofertas - Dispositivos Inteligentes</title>
+
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&family=Pacifico&display=swap" rel="stylesheet">
+
+<style>
+  body {
+    font-family: 'Montserrat', sans-serif;
+    background-color: #fdf6f9;
+    margin: 0;
+    display: flex;
+  }
+
+  /* Menú lateral */
+  nav.menu {
+    width: 220px;
+    background-color: #ff69b4;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem 0;
+    border-top-right-radius: 20px;
+    border-bottom-right-radius: 20px;
+  }
+
+  nav.menu img {
+    width: 150px;
+    border-radius: 20px;
+    object-fit: cover;
+    margin-bottom: 0.5rem;
+  }
+
+  nav.menu .eslogan {
+    font-size: 1rem;
+    font-weight: bold;
+    color: #fff;
+    text-align: center;
+    margin-bottom: 1.5rem;
+  }
+
+  nav.menu a {
+    margin: 0.5rem 0;
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    padding: 0.5rem 1rem;
+    border-radius: 10px;
+    transition: background 0.3s;
+  }
+
+  nav.menu a:hover {
+    background: #ff85c1;
+  }
+
+  /* Contenido principal */
+  .contenido {
+    margin-left: 240px;
+    padding: 2rem;
+    width: 100%;
+  }
+
+  header {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+
+  main {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1.5rem;
+  }
+
+  .oferta-card {
+    background-color: #fff;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    width: 220px;
+    text-align: center;
+    padding: 1rem;
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+
+  .oferta-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+  }
+
+  .oferta-card img {
+    width: 100%;
+    border-radius: 10px;
+    margin-bottom: 0.8rem;
+  }
+
+  .precio {
+    text-decoration: line-through;
+    color: gray;
+    margin: 0.2rem 0;
+  }
+
+  .precio-final {
+    color: red;
+    font-weight: bold;
+    margin: 0.2rem 0;
+  }
+</style>
+</head>
+<body>
+
+<!-- Menú lateral -->
+<nav class="menu">
+  <img src="imagenes/logo.png" alt="Logo DM Smart Store">
+  <div class="eslogan">Todos tus dispositivos en un solo lugar</div>
+  <a href="index.html">Inicio</a>
+  <a href="devices.html">Dispositivos</a>
+  <a href="ofertas.html">Ofertas</a>
+  <a href="contacto.html">Contacto</a>
+</nav>
+
+<!-- Contenido principal -->
+<div class="contenido">
+  <header>
+    <h1>Ofertas Especiales</h1>
+  </header>
+  <main id="ofertas-list"></main>
+</div>
+
+<script>
+fetch('data/ofertas.json')
+  .then(response => {
+    if (!response.ok) throw new Error("No se pudo cargar ofertas.json");
+    return response.json();
+  })
+  .then(ofertas => {
+    const container = document.getElementById('ofertas-list');
+    ofertas.forEach(oferta => {
+      const card = document.createElement('div');
+      card.classList.add('oferta-card');
+      card.innerHTML = `
+        <img src="${oferta.imagen}" alt="${oferta.nombre}">
+        <h3>${oferta.nombre}</h3>
+        <p>Marca: ${oferta.marca}</p>
+        <p class="precio">Precio: $${oferta.precio.toLocaleString()}</p>
+        <p>Descuento: ${oferta.descuento}</p>
+        <p class="precio-final">Precio final: $${oferta.precio_final.toLocaleString()}</p>
+      `;
+      container.appendChild(card);
+    });
+  })
+  .catch(error => {
+    console.error("Error cargando ofertas:", error);
+    document.getElementById('ofertas-list').innerHTML = "<p>No se pudieron cargar las ofertas.</p>";
+  });
+</script>
+
+</body>
+</html>

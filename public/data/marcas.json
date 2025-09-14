@@ -1,0 +1,62 @@
+[
+  {
+    "nombre": "Dell",
+    "descripcion": "Empresa estadounidense de tecnología especializada en computadoras y hardware.",
+    "pais": "Estados Unidos"
+  },
+  {
+    "nombre": "Samsung",
+    "descripcion": "Multinacional surcoreana dedicada a electrónica, electrodomésticos y dispositivos móviles.",
+    "pais": "Corea del Sur"
+  },
+  {
+    "nombre": "Apple",
+    "descripcion": "Compañía estadounidense que diseña y comercializa dispositivos electrónicos, software y servicios.",
+    "pais": "Estados Unidos"
+  },
+  {
+    "nombre": "Xiaomi",
+    "descripcion": "Empresa china especializada en teléfonos inteligentes, electrónica de consumo y software.",
+    "pais": "China"
+  },
+  {
+    "nombre": "Oppo",
+    "descripcion": "Compañía china de electrónica y telefonía móvil.",
+    "pais": "China"
+  },
+  {
+    "nombre": "VTA",
+    "descripcion": "Marca de dispositivos electrónicos y altavoces inteligentes.",
+    "pais": "Colombia"
+  },
+  {
+    "nombre": "LifeSmart Colombia",
+    "descripcion": "Empresa enfocada en soluciones de domótica y hogar inteligente.",
+    "pais": "Colombia"
+  },
+  {
+    "nombre": "Amazon Echo",
+    "descripcion": "Marca de altavoces inteligentes y dispositivos para el hogar, desarrollada por Amazon.",
+    "pais": "Estados Unidos"
+  },
+  {
+    "nombre": "IMOU",
+    "descripcion": "Marca especializada en cámaras de seguridad y soluciones de vigilancia inteligentes.",
+    "pais": "China"
+  },
+  {
+    "nombre": "Hisense",
+    "descripcion": "Compañía china que produce televisores, electrodomésticos y equipos electrónicos.",
+    "pais": "China"
+  },
+  {
+    "nombre": "Mabe",
+    "descripcion": "Fabricante de electrodomésticos con presencia en América Latina.",
+    "pais": "México"
+  },
+  {
+    "nombre": "Haceb",
+    "descripcion": "Empresa colombiana especializada en electrodomésticos para el hogar.",
+    "pais": "Colombia"
+  }
+]

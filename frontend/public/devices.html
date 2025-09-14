@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dispositivos Inteligentes</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&family=Pacifico&display=swap" rel="stylesheet">
+
+<style>
+body { font-family: 'Montserrat', sans-serif; background-color: #fff0f5; margin: 0; display: flex; }
+/* Sidebar */
+.sidebar { width: 240px; background-color: #d88ab1; color: white; height: 100vh; position: fixed; top: 0; left: 0; display: flex; flex-direction: column; align-items: center; padding: 1rem; }
+.sidebar img { width: 200px; margin-bottom: 0.8rem; background: white; padding: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.2); }
+.slogan { font-size: 1rem; font-style: italic; color: #ffe4f1; margin-bottom: 1.5rem; text-align: center; }
+.sidebar h2 { font-family: 'Pacifico', cursive; margin: 0.5rem 0 1rem 0; font-size: 1.4rem; }
+.sidebar nav a { color: white; text-decoration: none; display: block; padding: 0.6rem; border-radius: 8px; margin: 0.4rem 0; transition: background 0.3s; text-align: center; font-weight: 600; }
+.sidebar nav a:hover { background: #ffb6c1; }
+
+/* Main content */
+.main-content { margin-left: 240px; flex: 1; display: flex; flex-direction: column; min-height: 100vh; }
+header { background-color: #ffb6c1; color: white; text-align: center; padding: 1rem; border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; }
+.filters { display: flex; justify-content: center; gap: 1rem; margin: 1rem 0; }
+.filters input, .filters select { padding: 0.5rem; border-radius: 8px; border: 1px solid #ff69b4; }
+
+main { display: flex; flex-wrap: wrap; justify-content: center; padding: 2rem 1rem; gap: 1.5rem; }
+.device-card { background-color: #fff; border-radius: 15px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); width: 230px; text-align: center; padding: 1rem; transition: transform 0.3s, box-shadow 0.3s; cursor: pointer; }
+.device-card:hover { transform: translateY(-7px); box-shadow: 0 6px 12px rgba(0,0,0,0.2); }
+.device-card img { width: 100%; border-radius: 10px; margin-bottom: 0.8rem; }
+.device-card h3 { margin: 0.5rem 0; color: #ff69b4; }
+.precio { font-weight: 600; margin: 0.3rem 0; }
+
+/* Modal */
+.modal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.6); justify-content: center; align-items: center; overflow-y: auto; }
+.modal-content { background:white; padding:2rem; border-radius:15px; max-width:600px; width:90%; text-align:center; position: relative; }
+.close { position:absolute; top:10px; right:15px; font-size:1.5rem; cursor:pointer; color:#d88ab1; }
+
+/* Carrusel de imágenes */
+#galeria { display: flex; align-items: center; justify-content: center; gap: 1rem; margin-bottom: 1rem; }
+#galeria button { background: #ff69b4; color: white; border: none; border-radius: 50%; width: 35px; height: 35px; font-size: 1.2rem; cursor: pointer; }
+#fotoActual { max-width: 80%; border-radius: 10px; }
+
+/* Comentarios */
+.comentarios { text-align:left; margin-top:1rem; max-height:200px; overflow-y:auto; border-top:1px solid #ccc; padding-top:0.5rem; }
+.comentario { background:#ffe4f1; margin:5px 0; padding:5px 10px; border-radius:10px; }
+.input-comentario { display:flex; gap:5px; margin-top:1rem; }
+.input-comentario input { flex:1; padding:0.5rem; border-radius:8px; border:1px solid #ff69b4; }
+.input-comentario button { padding:0.5rem 1rem; border:none; border-radius:8px; background:#ff69b4; color:white; cursor:pointer; }
+</style>
+</head>
+<body>
+
+<aside class="sidebar">
+  <img src="imagenes/logo.png" alt="Logo">
+  <p class="slogan">✨ La tecnología a tu alcance ✨</p>
+  <h2>Menú</h2>
+  <nav>
+  <a href="index.html">Inicio</a>
+  <a href="devices.html">Dispositivos</a>
+  <a href="ofertas.html">Ofertas</a> <!-- Cambiado para ir a ofertas.html -->
+  <a href="#">Contacto</a>
+</nav>
+  </nav>
+</aside>
+
+<div class="main-content">
+  <header>
+    <h1>Todos los Dispositivos</h1>
+  </header>
+
+  <div class="filters">
+    <input type="text" id="busqueda" placeholder="Buscar dispositivo...">
+    <select id="filtroMarca">
+      <option value="">Todas las marcas</option>
+    </select>
+  </div>
+
+  <main id="device-list"></main>
+</div>
+
+<!-- Modal -->
+<div id="deviceModal" class="modal">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <div id="galeria">
+      <button id="prevFoto">&lt;</button>
+      <img id="fotoActual" src="" alt="">
+      <button id="nextFoto">&gt;</button>
+    </div>
+    <h2 id="modal-title"></h2>
+    <p id="modal-marca"></p>
+    <p id="modal-tipo"></p>
+    <p id="modal-precio"></p>
+    <p id="modal-lanzamiento"></p>
+    <p id="modal-descripcion"></p>
+    <p id="modal-resena"></p>
+
+    <div class="comentarios" id="comentarios"></div>
+
+    <div class="input-comentario">
+      <input type="text" id="nuevo-comentario" placeholder="Agregar un comentario...">
+      <button id="btn-comentar">Comentar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const container = document.getElementById('device-list');
+const modal = document.getElementById('deviceModal');
+const closeBtn = document.querySelector('.close');
+const fotoActual = document.getElementById('fotoActual');
+const prevFotoBtn = document.getElementById('prevFoto');
+const nextFotoBtn = document.getElementById('nextFoto');
+const comentariosDiv = document.getElementById('comentarios');
+const nuevoComentarioInput = document.getElementById('nuevo-comentario');
+const btnComentar = document.getElementById('btn-comentar');
+const busquedaInput = document.getElementById('busqueda');
+const filtroMarcaSelect = document.getElementById('filtroMarca');
+
+let dispositivos = [];
+let dispositivosFiltrados = [];
+let fotosActuales = [];
+let indiceFoto = 0;
+
+// Cargar dispositivos y ofertas, eliminando duplicados
+Promise.all([
+  fetch('data/dispositivos.json').then(res => res.json()),
+  fetch('data/ofertas.json').then(res => res.json())
+])
+.then(([dispositivosData, ofertasData]) => {
+  const mapa = new Map();
+
+  dispositivosData.forEach(d => {
+    mapa.set(d.nombre.toLowerCase() + '_' + d.marca.toLowerCase(), {
+      ...d,
+      fotos: d.fotos || [d.imagen]
+    });
+  });
+
+  ofertasData.forEach(d => {
+    // Solo agregar si no existe en dispositivos normales
+    const key = d.nombre.toLowerCase() + '_' + d.marca.toLowerCase();
+    if (!mapa.has(key)) {
+      mapa.set(key, {
+        ...d,
+        tipo: d.tipo || "En Oferta",
+        fotos: d.fotos || [d.imagen]
+      });
+    }
+  });
+
+  dispositivos = Array.from(mapa.values());
+  dispositivosFiltrados = [...dispositivos];
+
+  llenarFiltroMarcas();
+  mostrarDispositivos();
+})
+.catch(err => console.error("Error al cargar dispositivos y ofertas:", err));
+
+// Llenar filtro de marcas
+function llenarFiltroMarcas() {
+  const marcas = [...new Set(dispositivos.map(d => d.marca))];
+  marcas.forEach(m => {
+    const option = document.createElement('option');
+    option.value = m;
+    option.textContent = m;
+    filtroMarcaSelect.appendChild(option);
+  });
+}
+
+// Mostrar dispositivos
+function mostrarDispositivos() {
+  container.innerHTML = '';
+  dispositivosFiltrados.forEach(d => {
+    const card = document.createElement('div');
+    card.classList.add('device-card');
+
+    const precioHTML = `<p class="precio">$${d.precio.toLocaleString()}</p>`; // Solo precio normal
+
+    card.innerHTML = `
+      <img src="${d.imagen || (d.fotos && d.fotos[0])}" alt="${d.nombre}">
+      <h3>${d.nombre}</h3>
+      <p>Marca: ${d.marca}</p>
+      ${precioHTML}
+    `;
+    card.addEventListener('click', () => abrirModal(d));
+    container.appendChild(card);
+  });
+}
+
+// Filtrar dispositivos
+busquedaInput.addEventListener('input', filtrarDispositivos);
+filtroMarcaSelect.addEventListener('change', filtrarDispositivos);
+
+function filtrarDispositivos() {
+  const busqueda = busquedaInput.value.toLowerCase();
+  const marca = filtroMarcaSelect.value;
+  dispositivosFiltrados = dispositivos.filter(d => 
+    d.nombre.toLowerCase().includes(busqueda) && (marca === '' || d.marca === marca)
+  );
+  mostrarDispositivos();
+}
+
+// Abrir modal con carrusel
+function abrirModal(d) {
+  fotosActuales = d.fotos || [];
+  indiceFoto = 0;
+  if(fotosActuales.length > 0) fotoActual.src = fotosActuales[indiceFoto];
+
+  document.getElementById('modal-title').textContent = d.nombre;
+  document.getElementById('modal-marca').textContent = "Marca: " + d.marca;
+  document.getElementById('modal-tipo').textContent = "Tipo: " + d.tipo;
+  document.getElementById('modal-precio').textContent = "Precio: $" + d.precio.toLocaleString();
+  document.getElementById('modal-lanzamiento').textContent = "Lanzamiento: " + (d.fecha_lanzamiento || "N/A");
+  document.getElementById('modal-descripcion').textContent = d.descripcion || "";
+  document.getElementById('modal-resena').textContent = d.resena || "";
+
+  mostrarComentarios(d);
+  btnComentar.onclick = () => agregarComentario(d);
+
+  modal.style.display = 'flex';
+}
+
+// Carrusel
+prevFotoBtn.onclick = () => {
+  if(fotosActuales.length === 0) return;
+  indiceFoto = (indiceFoto - 1 + fotosActuales.length) % fotosActuales.length;
+  fotoActual.src = fotosActuales[indiceFoto];
+}
+nextFotoBtn.onclick = () => {
+  if(fotosActuales.length === 0) return;
+  indiceFoto = (indiceFoto + 1) % fotosActuales.length;
+  fotoActual.src = fotosActuales[indiceFoto];
+}
+
+// Comentarios
+function mostrarComentarios(d) {
+  comentariosDiv.innerHTML = '';
+  if (!d.comentarios) d.comentarios = [];
+  d.comentarios.forEach(c => {
+    const div = document.createElement('div');
+    div.classList.add('comentario');
+    div.textContent = c;
+    comentariosDiv.appendChild(div);
+  });
+}
+
+function agregarComentario(d) {
+  const texto = nuevoComentarioInput.value.trim();
+  if (!texto) return;
+  d.comentarios.push(texto);
+  nuevoComentarioInput.value = '';
+  mostrarComentarios(d);
+}
+
+// Cerrar modal
+closeBtn.onclick = () => modal.style.display = 'none';
+window.onclick = (e) => { if(e.target == modal) modal.style.display = 'none'; };
+</script>
+</body>
+</html>

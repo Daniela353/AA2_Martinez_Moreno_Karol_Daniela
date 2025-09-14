@@ -1,0 +1,221 @@
+[
+  {
+    "id": 1,
+    "nombre": "Laptop Intel Core i7",
+    "marca": "Dell",
+    "tipo": "Laptop",
+    "precio": 2480000,
+    "fecha_lanzamiento": "2023-03-10",
+    "descripcion": "Laptop de alto rendimiento para profesionales",
+    "resena": "Potente y ligera, ideal para multitarea y entretenimiento.",
+    "componentes": "16GB RAM, SSD 512GB, Procesador Intel i7, Tarjeta gráfica NVIDIA GTX 1650",
+    "imagen": "imagenes/Laptop_Intel_Core_i7.png",
+    "fotos": [
+      "imagenes/Laptop_Intel_Core_i7_2.png",
+      "imagenes/Laptop_Intel_Core_i7_3.png",
+      "imagenes/Laptop_Intel_Core_i7_4.png",
+      "imagenes/Laptop_Intel_Core_i7_5.png"
+    ],
+    "comentarios": []
+  },
+  {
+    "id": 2,
+    "nombre": "Smartphone Galaxy S25",
+    "marca": "Samsung",
+    "tipo": "Smartphone",
+    "precio": 2800000,
+    "fecha_lanzamiento": "2025-08-15",
+    "descripcion": "Teléfono inteligente con cámara profesional y alto rendimiento.",
+    "resena": "Rendimiento fluido y cámara profesional para todo tipo de uso.",
+    "componentes": "12GB RAM, 256GB Almacenamiento, Procesador Exynos, Pantalla AMOLED 6.7 pulgadas",
+    "imagen": "imagenes/Smartphone Galaxy S25.png",
+    "fotos": [
+      "imagenes/Smartphone Galaxy S25_1.png",
+      "imagenes/Smartphone Galaxy S25_2.png",
+      "imagenes/Smartphone Galaxy S25_3.png",
+      "imagenes/Smartphone Galaxy S25_4.png"
+    ],
+    "comentarios": []
+  },
+  {
+    "id": 3,
+    "nombre": "iPhone 15 Pro",
+    "marca": "Apple",
+    "tipo": "Smartphone",
+    "precio": 5000000,
+    "fecha_lanzamiento": "2025-09-01",
+    "descripcion": "Último smartphone de Apple con cámara avanzada y pantalla Super Retina.",
+    "resena": "Elegante y potente, ideal para fotos y gaming.",
+    "componentes": "6GB RAM, 256GB Almacenamiento, Procesador A17 Bionic",
+    "imagen": "imagenes/iPhone 15 Pro.jpg",
+    "fotos": [
+      "imagenes/iPhone 15 Pro_1.jpg",
+      "imagenes/iPhone 15 Pro_2.jpg",
+      "imagenes/iPhone 15 Pro_3.jpg",
+      "imagenes/iPhone 15 Pro_4.jpg",
+      "imagenes/iPhone 15 Pro_5.jpg"
+    ],
+    "comentarios": []
+  },
+  {
+    "id": 4,
+    "nombre": "Xiaomi 14",
+    "marca": "Xiaomi",
+    "tipo": "Smartphone",
+    "precio": 1800000,
+    "fecha_lanzamiento": "2024-12-20",
+    "descripcion": "Smartphone económico con buena cámara y batería duradera.",
+    "resena": "Rendimiento confiable a buen precio.",
+    "componentes": "8GB RAM, 128GB Almacenamiento, Procesador Snapdragon 8",
+    "imagen": "imagenes/Xiaomi 14.webp",
+    "fotos": [
+      "imagenes/Xiaomi 14_1.webp",
+      "imagenes/Xiaomi 14_2.webp"
+    ],
+    "comentarios": []
+  },
+  {
+    "id": 5,
+    "nombre": "Oppo Reno 12 F 5G",
+    "marca": "Oppo",
+    "tipo": "Smartphone",
+    "precio": 1500000,
+    "fecha_lanzamiento": "2024-11-10",
+    "descripcion": "Smartphone con cámara de 108MP y pantalla AMOLED.",
+    "resena": "Cámara profesional y diseño moderno.",
+    "componentes": "8GB RAM, 128GB Almacenamiento, Procesador MediaTek Dimensity",
+    "imagen": "imagenes/Oppo_Reno_12.png",
+    "fotos": [
+      "imagenes/Oppo_Reno_12_1.png",
+      "imagenes/Oppo_Reno_12_2.png",
+      "imagenes/Oppo_Reno_12_3.png"
+    ],
+    "comentarios": []
+  },
+  {
+    "id": 6,
+    "nombre": "Parlante Inalámbrico VTA 25W Sphere Beat",
+    "marca": "VTA",
+    "tipo": "Altavoz Inteligente",
+    "precio": 500000,
+    "fecha_lanzamiento": "2023-05-05",
+    "descripcion": "Altavoz inteligente con asistente de voz integrado.",
+    "resena": "Controla tu hogar y reproduce música con calidad.",
+    "componentes": "Wi-Fi, Bluetooth, Asistente de voz integrado",
+    "imagen": "imagenes/VTA_Smart_Speaker.png",
+    "fotos": [
+      "imagenes/VTA_Smart_Speaker_2.png",
+      "imagenes/VTA_Smart_Speaker_3.png",
+      "imagenes/VTA_Smart_Speaker_4.png"
+    ],
+    "comentarios": []
+  },
+  {
+    "id": 7,
+    "nombre": "Estación Inteligente",
+    "marca": "LifeSmart Colombia",
+    "tipo": "Domótica",
+    "precio": 350000,
+    "fecha_lanzamiento": "2024-01-20",
+    "descripcion": "Centro de control para dispositivos inteligentes del hogar.",
+    "resena": "Controla luces, cámaras y electrodomésticos desde tu smartphone.",
+    "componentes": "Wi-Fi, Bluetooth, App móvil",
+    "imagen": "imagenes/LifeSmart_Home_Hub.png",
+    "fotos": [
+      "imagenes/LifeSmart_Home_Hub_1.png",
+      "imagenes/LifeSmart_Home_Hub_2.png",
+      "imagenes/LifeSmart_Home_Hub_3.png"
+    ],
+    "comentarios": []
+  },
+  {
+    "id": 8,
+    "nombre": "Altavoz inteligente Alexa Echo Dot 5ta generación",
+    "marca": "Amazon Echo",
+    "tipo": "Altavoz Inteligente",
+    "precio": 400000,
+    "fecha_lanzamiento": "2023-07-10",
+    "descripcion": "Altavoz inteligente con Alexa integrada.",
+    "resena": "Controla tu hogar y escucha música fácilmente.",
+    "componentes": "Wi-Fi, Bluetooth, Alexa",
+    "imagen": "imagenes/Amazon_Echo_Dot.webp",
+    "fotos": [
+      "imagenes/Amazon_Echo_Dot_1.webp",
+      "imagenes/Amazon_Echo_Dot_2.webp",
+      "imagenes/Amazon_Echo_Dot_3.webp"
+    ],
+    "comentarios": []
+  },
+  {
+    "id": 9,
+    "nombre": "Cámara IP Wi-Fi Imou Cruiser SE+",
+    "marca": "IMOU",
+    "tipo": "Cámara de seguridad",
+    "precio": 350000,
+    "fecha_lanzamiento": "2023-02-15",
+    "descripcion": "Cámara de seguridad para interior y exterior con visión nocturna.",
+    "resena": "Fácil de instalar y controlar desde tu smartphone.",
+    "componentes": "Wi-Fi, Visión nocturna, App móvil",
+    "imagen": "imagenes/IMOU_Camara_IP.webp",
+    "fotos": [
+      "imagenes/IMOU_Camara_IP_1.webp",
+      "imagenes/IMOU_Camara_IP_2.webp",
+      "imagenes/IMOU_Camara_IP_3.webp",
+      "imagenes/IMOU_Camara_IP_4.webp"
+    ],
+    "comentarios": []
+  },
+  {
+    "id": 10,
+    "nombre": "Televisor HISENSE 50 pulgadas LED UHD 4K 50A6N",
+    "marca": "Hisense",
+    "tipo": "Televisor",
+    "precio": 1800000,
+    "fecha_lanzamiento": "2024-06-05",
+    "descripcion": "Televisor inteligente con resolución 4K.",
+    "resena": "Imagen nítida y conexión a servicios de streaming.",
+    "componentes": "4K, Smart TV, Wi-Fi, HDMI",
+    "imagen": "imagenes/Hisense_Smart_TV_50.webp",
+    "fotos": [
+      "imagenes/Hisense_Smart_TV_50_1.webp",
+      "imagenes/Hisense_Smart_TV_50_2.webp",
+      "imagenes/Hisense_Smart_TV_50_3.webp",
+      "imagenes/Hisense_Smart_TV_50_4.webp"
+    ],
+    "comentarios": []
+  },
+  {
+    "id": 11,
+    "nombre": "Nevera No Frost Brutos Grafito",
+    "marca": "Mabe",
+    "tipo": "Electrodoméstico",
+    "precio": 2800000,
+    "fecha_lanzamiento": "2023-10-10",
+    "descripcion": "Refrigerador de alta capacidad con eficiencia energética.",
+    "resena": "Diseño moderno y excelente conservación de alimentos.",
+    "componentes": "400L, Clase A+, Hielo automático",
+    "imagen": "imagenes/Mabe_Refrigerador.webp",
+    "fotos": [
+      "imagenes/Mabe_Refrigerador.webp"
+    ],
+    "comentarios": []
+  },
+  {
+    "id": 12,
+    "nombre": "Estufa con Horno Haceb 4 Puestos",
+    "marca": "Haceb",
+    "tipo": "Electrodoméstico",
+    "precio": 1100000,
+    "fecha_lanzamiento": "2023-08-15",
+    "descripcion": "Estufa moderna con horno y 4 quemadores.",
+    "resena": "Cocina de forma eficiente y segura.",
+    "componentes": "Gas natural, Horno incorporado, 4 quemadores",
+    "imagen": "imagenes/Haceb_Estufa.png",
+    "fotos": [
+      "imagenes/Haceb_Estufa_1.png",
+      "imagenes/Haceb_Estufa_2.png"
+    ],
+    "comentarios": []
+  }
+]
+

@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Administrador - DM Smart Store</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&family=Pacifico&display=swap" rel="stylesheet">
+<style>
+  body { margin:0; font-family: 'Montserrat', sans-serif; background: #f9f9fb; }
+  header { display:flex; justify-content:space-between; align-items:center; background:#e75480; color:white; padding:10px 20px; }
+  header h1 { margin:0; }
+  nav { background:#f8cdda; padding:10px; text-align:center; }
+  nav button { margin:0 10px; font-weight:bold; color:#e75480; background:none; border:none; cursor:pointer; font-size:1rem; }
+  nav button:hover { text-decoration:underline; }
+  main { padding:20px; }
+  .admin-producto { background:white; padding:15px; margin:15px; border-radius:10px; box-shadow:0 4px 10px rgba(0,0,0,0.1); display:inline-block; width:220px; text-align:center; vertical-align:top; position:relative; }
+  .admin-producto img { width:150px; height:auto; border-radius:10px; cursor:pointer; }
+  .btn { margin-top:10px; padding:5px 10px; border:none; border-radius:8px; cursor:pointer; font-weight:bold; }
+  .btn-comprar { background:#e75480; color:white; }
+  .btn-editar { background:#ffb347; color:white; margin-top:5px; }
+  .btn-eliminar { background:#d62828; color:white; margin-top:5px; }
+  .btn-logout { background:white; color:#e75480; border:none; padding:8px 15px; border-radius:8px; cursor:pointer; font-weight:bold; }
+  .btn-logout:hover { background:#fce4ec; }
+  .oferta-badge { position:absolute; top:10px; right:10px; background:red; color:white; padding:2px 6px; border-radius:5px; font-weight:bold; }
+  .modal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); justify-content:center; align-items:center; }
+  .modal-content { background:white; padding:20px; border-radius:10px; max-width:600px; width:90%; position:relative; }
+  .close { position:absolute; top:10px; right:15px; font-size:1.5rem; cursor:pointer; }
+  input, select { width:90%; margin:5px 0; padding:5px; border-radius:5px; border:1px solid #ddd; }
+  #filtros { margin-bottom:15px; text-align:center; }
+  #busqueda { width:200px; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>DM Smart Store - Admin</h1>
+  <button class="btn-logout" onclick="cerrarSesion()">Cerrar Sesión</button>
+</header>
+
+<nav>
+  <button onclick="cargarSeccion('productos')">Productos</button>
+  <button onclick="cargarSeccion('ofertas')">Ofertas</button>
+  <button onclick="cargarSeccion('usuarios')">Usuarios</button>
+  <button onclick="cargarSeccion('pedidos')">Pedidos</button>
+</nav>
+
+<main>
+  <h2 id="bienvenida"></h2>
+  <div id="filtros">
+    <input type="text" id="busqueda" placeholder="Buscar producto...">
+    <select id="filtroMarca"><option value="">Todas las marcas</option></select>
+  </div>
+  <div id="contenido"></div>
+  <button class="btn btn-comprar" onclick="abrirModalAgregar()">Agregar Producto</button>
+</main>
+
+<!-- Modal agregar/editar producto -->
+<div id="modal" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="cerrarModal()">&times;</span>
+    <h3 id="modal-titulo">Agregar Producto</h3>
+    <input type="text" id="prod-nombre" placeholder="Nombre">
+    <input type="text" id="prod-marca" placeholder="Marca">
+    <input type="text" id="prod-tipo" placeholder="Tipo">
+    <input type="number" id="prod-precio" placeholder="Precio">
+    <input type="date" id="prod-fecha" placeholder="Fecha de lanzamiento">
+    <input type="text" id="prod-imagen" placeholder="URL Imagen">
+    <label><input type="checkbox" id="prod-oferta"> En Oferta</label>
+    <button class="btn btn-comprar" id="btn-guardar">Guardar</button>
+  </div>
+</div>
+
+<script>
+const bienvenida = document.getElementById("bienvenida");
+const contenido = document.getElementById("contenido");
+const modal = document.getElementById("modal");
+const modalTitulo = document.getElementById("modal-titulo");
+const btnGuardar = document.getElementById("btn-guardar");
+const busquedaInput = document.getElementById("busqueda");
+const filtroMarca = document.getElementById("filtroMarca");
+
+let productosGlobal = [];
+let usuariosGlobal = [
+  { nombre: "Daniela", email: "daniela@mail.com", rol: "Cliente" },
+  { nombre: "Martha", email: "martha@mail.com", rol: "Cliente" },
+  { nombre: "Admin", email: "admin@mail.com", rol: "Administrador" }
+];
+let pedidosGlobal = [
+  { usuario: "Daniela", productos: [{ nombre: "iPhone 15 Pro", cantidad: 1, precio: 5000000 }], total: 5000000, fecha: "2025-08-21" },
+  { usuario: "Martha", productos: [{ nombre: "Laptop Intel Core i7", cantidad: 1, precio: 2480000 }], total: 2480000, fecha: "2025-08-20" }
+];
+let editarIndice = null;
+
+// Verificar admin
+const usuarioActivo = JSON.parse(localStorage.getItem("usuarioActivo"));
+if(!usuarioActivo || usuarioActivo.rol !== "Administrador") {
+  alert("Debes iniciar sesión como administrador.");
+  window.location.href = "login.html";
+} else {
+  bienvenida.innerText = `Bienvenido, ${usuarioActivo.nombre} 👋`;
+  cargarProductos();
+}
+
+function cerrarSesion() {
+  localStorage.removeItem("usuarioActivo");
+  window.location.href = "index.html";
+}
+
+// Cargar productos desde JSON
+function cargarProductos() {
+  fetch("data/dispositivos.json")
+    .then(res => res.json())
+    .then(data => {
+      productosGlobal = data;
+      actualizarFiltros();
+      cargarSeccion("productos");
+    })
+    .catch(err => console.error(err));
+}
+
+// Actualizar select marcas
+function actualizarFiltros(){
+  filtroMarca.innerHTML = '<option value="">Todas las marcas</option>';
+  const marcas = [...new Set(productosGlobal.map(p=>p.marca))];
+  marcas.forEach(m => {
+    const option = document.createElement("option");
+    option.value = m;
+    option.text = m;
+    filtroMarca.appendChild(option);
+  });
+}
+
+// Mostrar productos en pantalla
+function mostrarProductos(lista){
+  contenido.innerHTML = '';
+  lista.forEach((prod,index)=>{
+    const div = document.createElement("div");
+    div.classList.add("admin-producto");
+    let badge = prod.oferta ? '<div class="oferta-badge">OFERTA</div>' : '';
+    div.innerHTML = `
+      ${badge}
+      <img src="${prod.imagen}" alt="${prod.nombre}">
+      <h3>${prod.nombre}</h3>
+      <p>Marca: ${prod.marca}</p>
+      <p>Tipo: ${prod.tipo}</p>
+      <p>Precio: $${prod.precio.toLocaleString()}</p>
+      <p>Fecha: ${prod.fecha_lanzamiento}</p>
+      <button class="btn btn-editar">Editar</button>
+      <button class="btn btn-eliminar">Eliminar</button>
+    `;
+    div.querySelector(".btn-editar").addEventListener("click",()=>abrirModalEditar(index));
+    div.querySelector(".btn-eliminar").addEventListener("click",()=>{
+      if(confirm("¿Eliminar este producto?")){
+        productosGlobal.splice(index,1);
+        actualizarProductos();
+      }
+    });
+    contenido.appendChild(div);
+  });
+}
+
+// Filtrar productos
+function actualizarProductos(){
+  const busqueda = busquedaInput.value.toLowerCase();
+  const marca = filtroMarca.value;
+  const filtrados = productosGlobal.filter(p=>p.nombre.toLowerCase().includes(busqueda) && (!marca || p.marca===marca));
+  mostrarProductos(filtrados);
+}
+
+// Modal agregar/editar
+function abrirModalAgregar(){
+  modalTitulo.innerText="Agregar Producto";
+  btnGuardar.innerText="Agregar";
+  editarIndice=null;
+  limpiarModal();
+  modal.style.display="flex";
+}
+
+function abrirModalEditar(index){
+  modalTitulo.innerText="Editar Producto";
+  btnGuardar.innerText="Guardar";
+  editarIndice=index;
+  const prod = productosGlobal[index];
+  document.getElementById("prod-nombre").value=prod.nombre;
+  document.getElementById("prod-marca").value=prod.marca;
+  document.getElementById("prod-tipo").value=prod.tipo;
+  document.getElementById("prod-precio").value=prod.precio;
+  document.getElementById("prod-fecha").value=prod.fecha_lanzamiento;
+  document.getElementById("prod-imagen").value=prod.imagen;
+  document.getElementById("prod-oferta").checked=prod.oferta||false;
+  modal.style.display="flex";
+}
+
+function limpiarModal(){
+  document.getElementById("prod-nombre").value='';
+  document.getElementById("prod-marca").value='';
+  document.getElementById("prod-tipo").value='';
+  document.getElementById("prod-precio").value='';
+  document.getElementById("prod-fecha").value='';
+  document.getElementById("prod-imagen").value='';
+  document.getElementById("prod-oferta").checked=false;
+}
+
+btnGuardar.addEventListener("click",()=>{
+  const nombre = document.getElementById("prod-nombre").value.trim();
+  const marca = document.getElementById("prod-marca").value.trim();
+  const tipo = document.getElementById("prod-tipo").value.trim();
+  const precio = parseFloat(document.getElementById("prod-precio").value);
+  const fecha = document.getElementById("prod-fecha").value;
+  const imagen = document.getElementById("prod-imagen").value.trim();
+  const oferta = document.getElementById("prod-oferta").checked;
+
+  if(!nombre || !marca || !tipo || !precio || !fecha || !imagen){
+    alert("Completa todos los campos.");
+    return;
+  }
+
+  const producto={nombre,marca,tipo,precio,fecha_lanzamiento:fecha,imagen,oferta};
+
+  if(editarIndice!==null){
+    productosGlobal[editarIndice]=producto;
+  } else {
+    productosGlobal.push(producto);
+  }
+
+  actualizarFiltros();
+  actualizarProductos();
+  cerrarModal();
+});
+
+function cerrarModal(){ modal.style.display="none"; }
+
+// Secciones
+function cargarSeccion(seccion){
+  document.getElementById("filtros").style.display=(seccion==="productos"||seccion==="ofertas")?"block":"none";
+  if(seccion==="productos"){ actualizarProductos(); }
+  else if(seccion==="ofertas"){ mostrarProductos(productosGlobal.filter(p=>p.oferta)); }
+  else if(seccion==="usuarios"){
+    contenido.innerHTML="";
+    usuariosGlobal.forEach((user,index)=>{
+      const div = document.createElement("div");
+      div.classList.add("admin-producto");
+      div.innerHTML=`
+        <h3>${user.nombre}</h3>
+        <p>Email: ${user.email}</p>
+        <p>Rol: ${user.rol}</p>
+        <button class="btn btn-editar">Editar</button>
+        <button class="btn btn-eliminar">Eliminar</button>
+      `;
+      div.querySelector(".btn-editar").addEventListener("click",()=>{
+        const nuevoNombre = prompt("Nuevo nombre:",user.nombre);
+        const nuevoEmail = prompt("Nuevo email:",user.email);
+        const nuevoRol = prompt("Nuevo rol (Cliente/Administrador):",user.rol);
+        if(nuevoNombre && nuevoEmail && nuevoRol){
+          usuariosGlobal[index]={nombre:nuevoNombre,email:nuevoEmail,rol:nuevoRol};
+          cargarSeccion("usuarios");
+        }
+      });
+      div.querySelector(".btn-eliminar").addEventListener("click",()=>{
+        if(confirm("¿Eliminar este usuario?")){
+          usuariosGlobal.splice(index,1);
+          cargarSeccion("usuarios");
+        }
+      });
+      contenido.appendChild(div);
+    });
+  }
+  else if(seccion==="pedidos"){
+    contenido.innerHTML="";
+    pedidosGlobal.forEach((pedido,index)=>{
+      const div = document.createElement("div");
+      div.classList.add("admin-producto");
+      div.innerHTML=`
+        <h3>Pedido de ${pedido.usuario}</h3>
+        <p>Fecha: ${pedido.fecha}</p>
+        <p>Total: $${pedido.total.toLocaleString()}</p>
+        <p>Productos:</p>
+        <ul>${pedido.productos.map(p=>`<li>${p.nombre} x${p.cantidad} - $${p.precio.toLocaleString()}</li>`).join("")}</ul>
+        <button class="btn btn-editar">Completar</button>
+        <button class="btn btn-eliminar">Eliminar</button>
+      `;
+      div.querySelector(".btn-editar").addEventListener("click",()=>{
+        alert(`Pedido de ${pedido.usuario} marcado como completado.`);
+        pedidosGlobal.splice(index,1);
+        cargarSeccion("pedidos");
+      });
+      div.querySelector(".btn-eliminar").addEventListener("click",()=>{
+        if(confirm("¿Eliminar este pedido?")){
+          pedidosGlobal.splice(index,1);
+          cargarSeccion("pedidos");
+        }
+      });
+      contenido.appendChild(div);
+    });
+  }
+}
+
+// Eventos filtros
+busquedaInput.addEventListener("input", actualizarProductos);
+filtroMarca.addEventListener("change", actualizarProductos);
+
+</script>
+</body>
+</html>
