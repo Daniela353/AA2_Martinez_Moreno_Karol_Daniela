@@ -2,18 +2,26 @@
 // ================== Conexión ==================
 include __DIR__ . "/../src/conexion.php"; // Conexión a la base de datos
 header('Content-Type: application/json'); // Respuesta en JSON
-
-// ====================== FUNCIONES CRUD COMENTARIOS ======================
-
+session_start(); // Iniciar sesión
 
 // ====================== FUNCIONES CRUD COMENTARIOS ======================
 
 // Listar todos los comentarios
-function listarComentarios($conn) {
-    $sql = "SELECT com.id_comentario, d.Nombre AS Dispositivo, u.Nombre AS Usuario, com.comentario, com.fecha_comentario
+function listarComentarios($conn){
+    $sql = "SELECT 
+                com.id_comentario,
+                d.Nombre AS Dispositivo,
+                CASE 
+                    WHEN com.rol='Administrador' THEN com.nombre_usuario
+                    WHEN com.rol='Cliente' THEN com.nombre_usuario
+                    ELSE com.nombre_invitado
+                END AS Usuario,
+                com.comentario,
+                com.fecha_comentario,
+                com.rol
             FROM comentarios com
-            JOIN dispositivo d ON com.id_dispositivo = d.id_dispositivo
-            JOIN usuario u ON com.id_usuario = u.id_usuario";
+            LEFT JOIN dispositivo d ON com.id_dispositivo=d.id_dispositivo
+            ORDER BY com.fecha_comentario DESC";
     $result = $conn->query($sql);
     $comentarios = [];
     while($row = $result->fetch_assoc()){
@@ -25,19 +33,36 @@ function listarComentarios($conn) {
 // Obtener un comentario por ID
 function obtenerComentario($conn, $id) {
     $id = intval($id);
-    $sql = "SELECT com.id_comentario, d.Nombre AS Dispositivo, u.Nombre AS Usuario, com.comentario, com.fecha_comentario
+    $sql = "SELECT 
+                com.id_comentario,
+                d.Nombre AS Dispositivo,
+                CASE 
+                    WHEN com.rol = 'Administrador' THEN a.Nombre
+                    WHEN com.rol = 'Cliente' THEN u.Nombre
+                    ELSE com.nombre_invitado
+                END AS Usuario,
+                com.comentario,
+                com.fecha_comentario,
+                com.rol
             FROM comentarios com
-            JOIN dispositivo d ON com.id_dispositivo = d.id_dispositivo
-            JOIN usuario u ON com.id_usuario = u.id_usuario
+            LEFT JOIN usuario u ON com.id_usuario = u.id_usuario AND com.rol='Cliente'
+            LEFT JOIN admin a ON com.id_usuario = a.id_admin AND com.rol='Administrador'
+            LEFT JOIN dispositivo d ON com.id_dispositivo = d.id_dispositivo
             WHERE com.id_comentario = $id LIMIT 1";
     $result = $conn->query($sql);
     return $result->fetch_assoc();
 }
 
-// Validar existencia de usuario y dispositivo
+// Validar existencia de usuario/admin y dispositivo
 function usuarioExiste($conn, $id_usuario) {
     $id_usuario = intval($id_usuario);
     $result = $conn->query("SELECT * FROM usuario WHERE id_usuario=$id_usuario AND estado='activo' LIMIT 1");
+    return $result->num_rows > 0;
+}
+
+function adminExiste($conn, $id_admin) {
+    $id_admin = intval($id_admin);
+    $result = $conn->query("SELECT * FROM admin WHERE id_admin=$id_admin AND estado='activo' LIMIT 1");
     return $result->num_rows > 0;
 }
 
@@ -48,26 +73,32 @@ function dispositivoExiste($conn, $id_dispositivo) {
 }
 
 // Agregar un nuevo comentario
-function agregarComentario($conn, $id_dispositivo, $id_usuario, $comentario, $nombre_invitado=null, $email_invitado=null) {
+function agregarComentario($conn, $id_dispositivo, $id_usuario, $rol, $comentario){
     if (!dispositivoExiste($conn, $id_dispositivo)) {
-        return ['success' => false, 'error' => 'Dispositivo no válido'];
+        return ['success'=>false,'error'=>'Dispositivo no válido'];
     }
 
-    if($id_usuario){ // usuario registrado
-        $stmt = $conn->prepare("INSERT INTO comentarios (id_dispositivo, id_usuario, comentario) VALUES (?, ?, ?)");
-        $stmt->bind_param("iis", $id_dispositivo, $id_usuario, $comentario);
-    } else { // invitado
-        $stmt = $conn->prepare("INSERT INTO comentarios (id_dispositivo, comentario, nombre_invitado, email_invitado) VALUES (?, ?, ?, ?)");
-        $stmt->bind_param("isss", $id_dispositivo, $comentario, $nombre_invitado, $email_invitado);
+    if($rol === 'Cliente' && !usuarioExiste($conn, $id_usuario)){
+        return ['success'=>false,'error'=>'Usuario no válido'];
     }
 
-    return ['success' => $stmt->execute()];
+    if($rol === 'Administrador' && !adminExiste($conn, $id_usuario)){
+        return ['success'=>false,'error'=>'Administrador no válido'];
+    }
+
+    $stmt = $conn->prepare("INSERT INTO comentarios (id_dispositivo, id_usuario, comentario, rol) VALUES (?, ?, ?, ?)");
+    $stmt->bind_param("iiss", $id_dispositivo, $id_usuario, $comentario, $rol);
+    return ['success'=>$stmt->execute()];
 }
 
 // Editar un comentario existente
 function editarComentario($conn, $id, $id_dispositivo, $id_usuario, $comentario) {
-    if (!usuarioExiste($conn, $id_usuario) || !dispositivoExiste($conn, $id_dispositivo)) {
-        return ['success' => false, 'error' => 'Usuario o dispositivo no válido'];
+    if (!usuarioExiste($conn, $id_usuario) && !adminExiste($conn, $id_usuario)) {
+        return ['success' => false, 'error' => 'Usuario o administrador no válido'];
+    }
+
+    if (!dispositivoExiste($conn, $id_dispositivo)) {
+        return ['success' => false, 'error' => 'Dispositivo no válido'];
     }
 
     $stmt = $conn->prepare("UPDATE comentarios SET id_dispositivo=?, id_usuario=?, comentario=? WHERE id_comentario=?");
@@ -95,18 +126,28 @@ switch($action) {
         break;
 
     case 'agregar':
-        case 'agregar':
-    $data = json_decode(file_get_contents('php://input'), true);
-    $response = agregarComentario(
-        $conn,
-        intval($data['id_dispositivo'] ?? 0),
-        $data['id_usuario'] ?? null,
-        $data['comentario'] ?? '',
-        $data['nombre_invitado'] ?? null,
-        $data['email_invitado'] ?? null
-    );
-    echo json_encode($response);
-    break;
+        $data = json_decode(file_get_contents('php://input'), true);
+
+        $id_dispositivo = intval($data['id_dispositivo'] ?? 0);
+        $comentario = $data['comentario'] ?? '';
+        $nombre_invitado = $data['nombre_invitado'] ?? null;
+        $email_invitado = $data['email_invitado'] ?? null;
+
+        // Determinar el id_usuario y rol desde la sesión
+        if (isset($_SESSION['admin_id'])) {
+            $id_usuario = $_SESSION['admin_id'];
+            $rol = 'Administrador';
+        } elseif (isset($_SESSION['usuario_id'])) {
+            $id_usuario = $_SESSION['usuario_id'];
+            $rol = 'Cliente';
+        } else {
+            $id_usuario = null;
+            $rol = 'Invitado';
+        }
+
+        $response = agregarComentario($conn, $id_dispositivo, $id_usuario, $rol, $comentario, $nombre_invitado, $email_invitado);
+        echo json_encode($response);
+        break;
 
     case 'editar':
         $id = intval($_GET['id'] ?? 0);

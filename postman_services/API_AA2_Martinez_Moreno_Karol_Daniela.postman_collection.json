@@ -1,0 +1,2236 @@
+{
+	"info": {
+		"_postman_id": "85e0ef51-84da-4ec7-b117-8992ab4de76c",
+		"name": "API_AA2_Martinez_Moreno_Karol_Daniela",
+		"description": "# 🚀 Get started here\n\nThis template guides you through CRUD operations (GET, POST, PUT, DELETE), variables, and tests.\n\n## 🔖 **How to use this template**\n\n#### **Step 1: Send requests**\n\nRESTful APIs allow you to perform CRUD operations using the POST, GET, PUT, and DELETE HTTP methods.\n\nThis collection contains each of these [request](https://learning.postman.com/docs/sending-requests/requests/) types. Open each request and click \"Send\" to see what happens.\n\n#### **Step 2: View responses**\n\nObserve the response tab for status code (200 OK), response time, and size.\n\n#### **Step 3: Send new Body data**\n\nUpdate or add new data in \"Body\" in the POST request. Typically, Body data is also used in PUT request.\n\n```\n{\n    \"name\": \"Add your name in the body\"\n}\n\n ```\n\n#### **Step 4: Update the variable**\n\nVariables enable you to store and reuse values in Postman. We have created a [variable](https://learning.postman.com/docs/sending-requests/variables/) called `base_url` with the sample request [https://postman-api-learner.glitch.me](https://postman-api-learner.glitch.me). Replace it with your API endpoint to customize this collection.\n\n#### **Step 5: Add tests in the \"Scripts\" tab**\n\nAdding tests to your requests can help you confirm that your API is working as expected. You can write test scripts in JavaScript and view the output in the \"Test Results\" tab.\n\n<img src=\"https://content.pstmn.io/fa30ea0a-373d-4545-a668-e7b283cca343/aW1hZ2UucG5n\" alt=\"\" height=\"1530\" width=\"2162\">\n\n## 💪 Pro tips\n\n- Use folders to group related requests and organize the collection.\n    \n- Add more [scripts](https://learning.postman.com/docs/writing-scripts/intro-to-scripts/) to verify if the API works as expected and execute workflows.\n    \n\n## 💡Related templates\n\n[API testing basics](https://go.postman.co/redirect/workspace?type=personal&collectionTemplateId=e9a37a28-055b-49cd-8c7e-97494a21eb54&sourceTemplateId=ddb19591-3097-41cf-82af-c84273e56719)  \n[API documentation](https://go.postman.co/redirect/workspace?type=personal&collectionTemplateId=e9c28f47-1253-44af-a2f3-20dce4da1f18&sourceTemplateId=ddb19591-3097-41cf-82af-c84273e56719)  \n[Authorization methods](https://go.postman.co/redirect/workspace?type=personal&collectionTemplateId=31a9a6ed-4cdf-4ced-984c-d12c9aec1c27&sourceTemplateId=ddb19591-3097-41cf-82af-c84273e56719)",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "48369607",
+		"_collection_link": "https://marticayanecita73-2810083.postman.co/workspace/Martha-Yaneth-Moreno-Garzon's-W~fe63f7fd-7497-45d9-8562-31a01c994b09/collection/48369607-85e0ef51-84da-4ec7-b117-8992ab4de76c?action=share&source=collection_link&creator=48369607"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "auth_(login)",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {\r",
+									"    pm.expect(pm.response.code).to.eql(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Response time is less than 200ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Response contains required fields: status and message\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"\r",
+									"    pm.expect(responseData).to.be.an('object');\r",
+									"    pm.expect(responseData).to.have.all.keys('status', 'message');\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Status must be a non-empty string\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    \r",
+									"    pm.expect(responseData).to.be.an('object');\r",
+									"    pm.expect(responseData.status).to.exist.and.to.be.a('string').and.to.have.lengthOf.at.least(1, \"Status should not be empty\");\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Message must be a non-empty string\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    \r",
+									"    pm.expect(responseData).to.be.an('object');\r",
+									"    pm.expect(responseData.message).to.exist.and.to.be.a('string').and.to.have.lengthOf.at.least(1, \"Message should not be empty\");\r",
+									"});\r",
+									"\r",
+									"// Guardar token en variable de colección\r",
+									"let jsonData = pm.response.json();\r",
+									"if(jsonData.token) {\r",
+									"    pm.collectionVariables.set(\"token\", jsonData.token);\r",
+									"}\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"admin@tienda.com\",\r\n  \"password\": \"1234\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost/AA2_Martinez_Moreno_Karol_Daniela/api/auth.php",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"AA2_Martinez_Moreno_Karol_Daniela",
+								"api",
+								"auth.php"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Usuarios",
+			"item": [
+				{
+					"name": "Listar usuarios",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost/AA2_Martinez_Moreno_Karol_Daniela/api/usuario.php",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"AA2_Martinez_Moreno_Karol_Daniela",
+								"api",
+								"usuario.php"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Eliminar usuario",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost/AA2_Martinez_Moreno_Karol_Daniela/api/usuario.php?id=5",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"AA2_Martinez_Moreno_Karol_Daniela",
+								"api",
+								"usuario.php"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "5"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Crear usuario",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"nombre\": \"Cliente Nuevo\",\r\n  \"email\": \"cliente2@correo.com\",\r\n  \"password\": \"1234\",\r\n  \"rol\": \"Cliente\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost/AA2_Martinez_Moreno_Karol_Daniela/api/usuario.php",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"AA2_Martinez_Moreno_Karol_Daniela",
+								"api",
+								"usuario.php"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Actualizar usuario",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"nombre\": \"Juan Pérez Modificado\",\r\n  \"email\": \"cliente_mod@correo.com\",\r\n  \"password\": \"5678\",\r\n  \"rol\": \"Cliente\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost/AA2_Martinez_Moreno_Karol_Daniela/api/usuario.php?id=5",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"AA2_Martinez_Moreno_Karol_Daniela",
+								"api",
+								"usuario.php"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "5"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Dispositivos",
+			"item": [
+				{
+					"name": "Eliminar Dispositivo",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": " Bearer {{token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost/AA2_Martinez_Moreno_Karol_Daniela/api/dispositivos.php?id=15",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"AA2_Martinez_Moreno_Karol_Daniela",
+								"api",
+								"dispositivos.php"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "15"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Actualizar un dispositivo",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"Nombre\": \"Smartphone Ultra X\",\r\n  \"Marca\": 2,\r\n  \"tipo\": \"Teléfono\",\r\n  \"Categoria\": 1,\r\n  \"precio\": 2599.99,\r\n  \"stock\": 50,\r\n  \"oferta\": 1,\r\n  \"fecha_lanzamiento\": \"2025-01-15\",\r\n  \"resena\": \"Teléfono de gama alta con excelente cámara y batería de larga duración.\",\r\n  \"descripcion\": \"Pantalla AMOLED de 6.7 pulgadas, procesador octa-core, 12GB RAM, 256GB almacenamiento.\",\r\n  \"componentes\": \"Cargador rápido, auriculares inalámbricos, funda protectora\",\r\n  \"imagen\": \"smartphone_ultra_x.jpg\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost/AA2_Martinez_Moreno_Karol_Daniela/api/dispositivos.php?id=14\n",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"AA2_Martinez_Moreno_Karol_Daniela",
+								"api",
+								"dispositivos.php"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "14\n"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Crear un dispositivo",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"Nombre\": \"Tablet Z\",\r\n  \"Marca\": 3,\r\n  \"tipo\": \"Tablet\",\r\n  \"Categoria\": 2,\r\n  \"precio\": 1500.00,\r\n  \"stock\": 5,\r\n  \"oferta\": 1,\r\n  \"fecha_lanzamiento\": \"2025-09-15\",\r\n  \"resena\": \"Muy buena\",\r\n  \"descripcion\": \"Tablet con excelente rendimiento\",\r\n  \"componentes\": \"CPU, RAM, Pantalla\",\r\n  \"imagen\": \"tablet_z.jpg\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost/AA2_Martinez_Moreno_Karol_Daniela/api/dispositivos.php",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"AA2_Martinez_Moreno_Karol_Daniela",
+								"api",
+								"dispositivos.php"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Listar todos los dispositivos",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost/AA2_Martinez_Moreno_Karol_Daniela/api/dispositivos.php",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"AA2_Martinez_Moreno_Karol_Daniela",
+								"api",
+								"dispositivos.php"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Marcas",
+			"item": [
+				{
+					"name": "Crear marca",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Beare {{token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"nombre_marca\": \"Sony\",\r\n  \"pais_origen\": \"Japón\",\r\n  \"descripcion\": \"Fabricante líder en productos electrónicos y entretenimiento\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost/AA2_Martinez_Moreno_Karol_Daniela/api/marcas.php",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"AA2_Martinez_Moreno_Karol_Daniela",
+								"api",
+								"marcas.php"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Eliminar marca",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost/AA2_Martinez_Moreno_Karol_Daniela/api/marcas.php?id=15",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"AA2_Martinez_Moreno_Karol_Daniela",
+								"api",
+								"marcas.php"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "15"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Actualizar marca",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"nombre_marca\": \"Sony_10\",\r\n  \"pais_origen\": \"Japón\",\r\n  \"descripcion\": \"Fabricante líder en productos electrónicos y entretenimiento\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost/AA2_Martinez_Moreno_Karol_Daniela/api/marcas.php?id=15\n",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"AA2_Martinez_Moreno_Karol_Daniela",
+								"api",
+								"marcas.php"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "15\n"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Listar todas las marcas",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost/AA2_Martinez_Moreno_Karol_Daniela/api/marcas.php",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"AA2_Martinez_Moreno_Karol_Daniela",
+								"api",
+								"marcas.php"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Categorias",
+			"item": [
+				{
+					"name": "Actualizar categoría ",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nombre_categoria\": \"Electrónica y Tecnología\",\r\n    \"descripcion\": \"Todos los productos electrónicos y tecnológicos actualizados\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost/AA2_Martinez_Moreno_Karol_Daniela/api/categorias.php?id=7",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"AA2_Martinez_Moreno_Karol_Daniela",
+								"api",
+								"categorias.php"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "7"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Eliminar Categoria",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nombre_categoria\": \"Electrónica y Tecnología\",\r\n    \"descripcion\": \"Todos los productos electrónicos y tecnológicos actualizados\"\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost/AA2_Martinez_Moreno_Karol_Daniela/api/categorias.php?id=7",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"AA2_Martinez_Moreno_Karol_Daniela",
+								"api",
+								"categorias.php"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "7"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Crear categoría ",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"nombre_categoria\": \"Computadores\",\r\n  \"descripcion\": \"Productos relacionados con computación\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost/AA2_Martinez_Moreno_Karol_Daniela/api/categorias.php",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"AA2_Martinez_Moreno_Karol_Daniela",
+								"api",
+								"categorias.php"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Listar categorías ",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost/AA2_Martinez_Moreno_Karol_Daniela/api/categorias.php",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"AA2_Martinez_Moreno_Karol_Daniela",
+								"api",
+								"categorias.php"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Comentarios",
+			"item": [
+				{
+					"name": "Listar todos los comentarios",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost/AA2_Martinez_Moreno_Karol_Daniela/api/comentario.php",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"AA2_Martinez_Moreno_Karol_Daniela",
+								"api",
+								"comentario.php"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Crear un comentario",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"id_dispositivo\": 2,\r\n  \"id_usuario\": 3,\r\n  \"comentario\": \"Excelente calidad, recomendado\",\r\n  \"calificacion\": 5\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost/AA2_Martinez_Moreno_Karol_Daniela/api/comentario.php",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"AA2_Martinez_Moreno_Karol_Daniela",
+								"api",
+								"comentario.php"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Actualizar un comentario",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id_comentario\": 2,\r\n    \"id_dispositivo\": 2,\r\n    \"id_usuario\": 1,\r\n    \"comentario\": \"Excelente calidad, recomendado\",\r\n    \"calificacion\": 4,\r\n    \"fecha_comentario\": \"2025-09-18 21:13:49\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost/AA2_Martinez_Moreno_Karol_Daniela/api/comentario.php?id=2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"AA2_Martinez_Moreno_Karol_Daniela",
+								"api",
+								"comentario.php"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Eliminar un comentario",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost/AA2_Martinez_Moreno_Karol_Daniela/api/comentario.php?id=2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"AA2_Martinez_Moreno_Karol_Daniela",
+								"api",
+								"comentario.php"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Imagenes",
+			"item": [
+				{
+					"name": "Crear una  imagen ",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id_imagen\": 16,\r\n    \"id_dispositivo\": 8,\r\n    \"tipo_imagen\": \"secundaria\",\r\n    \"imagen_secundaria\": \"imagenes/Sony_PlayStation_6_2.png\"\r\n  }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost/AA2_Martinez_Moreno_Karol_Daniela/api/imagen.php",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"AA2_Martinez_Moreno_Karol_Daniela",
+								"api",
+								"imagen.php"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Actualizar la imagen ",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"id_imagen\": 25,\r\n  \"id_dispositivo\": 8,\r\n  \"tipo_imagen\": \"secundaria\",\r\n  \"imagen_secundaria\": \"imagenes/Asus_ROG_Zephyrus_1.png\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost/AA2_Martinez_Moreno_Karol_Daniela/api/imagen.php",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"AA2_Martinez_Moreno_Karol_Daniela",
+								"api",
+								"imagen.php"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Eliminar una Imagen ",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost/AA2_Martinez_Moreno_Karol_Daniela/api/imagen.php?id=25",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"AA2_Martinez_Moreno_Karol_Daniela",
+								"api",
+								"imagen.php"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "25"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Listar las imágenes",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost/AA2_Martinez_Moreno_Karol_Daniela/api/imagen.php",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"AA2_Martinez_Moreno_Karol_Daniela",
+								"api",
+								"imagen.php"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Ofertas",
+			"item": [
+				{
+					"name": "Listar las ofertas",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost/AA2_Martinez_Moreno_Karol_Daniela/api/ofertas.php",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"AA2_Martinez_Moreno_Karol_Daniela",
+								"api",
+								"ofertas.php"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Crear oferta",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"id_dispositivo\": 9,\r\n  \"precio_original\": 2500.00,\r\n  \"descuento_porcentaje\": 20,\r\n  \"estado\": \"activa\",\r\n  \"fecha_inicio\": \"2025-09-18\",\r\n  \"fecha_fin\": \"2025-09-30\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost/AA2_Martinez_Moreno_Karol_Daniela/api/ofertas.php",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"AA2_Martinez_Moreno_Karol_Daniela",
+								"api",
+								"ofertas.php"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Actualizar oferta",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"id_oferta\": 13,\r\n  \"id_dispositivo\": 9,\r\n  \"precio_original\": 2500.00,\r\n  \"descuento_porcentaje\": 15,\r\n  \"estado\": \"activa\",\r\n  \"fecha_inicio\": \"2025-09-20\",\r\n  \"fecha_fin\": \"2025-09-25\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost/AA2_Martinez_Moreno_Karol_Daniela/api/ofertas.php",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"AA2_Martinez_Moreno_Karol_Daniela",
+								"api",
+								"ofertas.php"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Eliminar oferta",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost/AA2_Martinez_Moreno_Karol_Daniela/api/ofertas.php?id=13",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"AA2_Martinez_Moreno_Karol_Daniela",
+								"api",
+								"ofertas.php"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "13"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Pedidos",
+			"item": [
+				{
+					"name": "Listar los pedidos",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost/AA2_Martinez_Moreno_Karol_Daniela/api/pedido.php",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"AA2_Martinez_Moreno_Karol_Daniela",
+								"api",
+								"pedido.php"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Crear pedido",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id_pedido\": 2,\r\n    \"id_usuario\": 2,\r\n    \"estado\": \"pendiente\",\r\n    \"total\": 1299.99,\r\n    \"fecha_orden\": \"2025-09-15\"\r\n  }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost/AA2_Martinez_Moreno_Karol_Daniela/api/pedido.php",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"AA2_Martinez_Moreno_Karol_Daniela",
+								"api",
+								"pedido.php"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Actualizar pedido",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id_pedido\": 5,\r\n    \"id_usuario\": 2,\r\n    \"estado\": \"pendiente\",\r\n    \"total\": 1299.909,\r\n    \"fecha_orden\": \"2025-10-15\"\r\n  }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost/AA2_Martinez_Moreno_Karol_Daniela/api/pedido.php",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"AA2_Martinez_Moreno_Karol_Daniela",
+								"api",
+								"pedido.php"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Eliminar pedido",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost/AA2_Martinez_Moreno_Karol_Daniela/api/pedido.php?id=5",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"AA2_Martinez_Moreno_Karol_Daniela",
+								"api",
+								"pedido.php"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "5"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Detalle_Pedido",
+			"item": [
+				{
+					"name": "Listar los detalles",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost/AA2_Martinez_Moreno_Karol_Daniela/api/detalle_pedido.php",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"AA2_Martinez_Moreno_Karol_Daniela",
+								"api",
+								"detalle_pedido.php"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Crear un detalle",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id_detalle\": 3,\r\n    \"id_pedido\": 4,\r\n    \"id_dispositivo\": 1,\r\n    \"cantidad\": 1,\r\n    \"precio_unitario\": 1299.99\r\n  }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost/AA2_Martinez_Moreno_Karol_Daniela/api/detalle_pedido.php",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"AA2_Martinez_Moreno_Karol_Daniela",
+								"api",
+								"detalle_pedido.php"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Eliminar un detalle",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost/AA2_Martinez_Moreno_Karol_Daniela/api/detalle_pedido.php?id=7\n",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"AA2_Martinez_Moreno_Karol_Daniela",
+								"api",
+								"detalle_pedido.php"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "7\n"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Actualizar un detalle",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id_detalle\": 7,\r\n    \"id_pedido\": 4,\r\n    \"id_dispositivo\": 1,\r\n    \"cantidad\": 10,\r\n    \"precio_unitario\": 1299.995\r\n  }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost/AA2_Martinez_Moreno_Karol_Daniela/api/detalle_pedido.php",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"AA2_Martinez_Moreno_Karol_Daniela",
+								"api",
+								"detalle_pedido.php"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Carrito_compra",
+			"item": [
+				{
+					"name": "Listar los productos del carrito",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost/AA2_Martinez_Moreno_Karol_Daniela/api/carrito_compra.php",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"AA2_Martinez_Moreno_Karol_Daniela",
+								"api",
+								"carrito_compra.php"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Actualizar cantidad",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": " {\r\n    \"id_carrito\": 6,\r\n    \"id_usuario\": 2,\r\n    \"id_dispositivo\": 1,\r\n    \"cantidad\": 10,\r\n    \"fecha_agregado\": \"2025-09-15\"\r\n  }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost/AA2_Martinez_Moreno_Karol_Daniela/api/carrito_compra.php",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"AA2_Martinez_Moreno_Karol_Daniela",
+								"api",
+								"carrito_compra.php"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Eliminar producto ",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost/AA2_Martinez_Moreno_Karol_Daniela/api/carrito_compra.php?id=6",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"AA2_Martinez_Moreno_Karol_Daniela",
+								"api",
+								"carrito_compra.php"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "6"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Agregar producto al carrito",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": " {\r\n    \"id_carrito\": 1,\r\n    \"id_usuario\": 3,\r\n    \"id_dispositivo\": 1,\r\n    \"cantidad\": 1,\r\n    \"fecha_agregado\": \"2025-09-15\"\r\n  }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost/AA2_Martinez_Moreno_Karol_Daniela/api/carrito_compra.php",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"AA2_Martinez_Moreno_Karol_Daniela",
+								"api",
+								"carrito_compra.php"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Contacto",
+			"item": [
+				{
+					"name": "Listar mensajes",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost/AA2_Martinez_Moreno_Karol_Daniela/api/contacto.php",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"AA2_Martinez_Moreno_Karol_Daniela",
+								"api",
+								"contacto.php"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Responder mensaje ",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": " {\r\n    \"id_contacto\": 2,\r\n    \"respuesta\": \"Tu pedido ha sido enviado\",\r\n    \"estado\": \"Respondido\"\r\n  }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost/AA2_Martinez_Moreno_Karol_Daniela/api/contacto.php",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"AA2_Martinez_Moreno_Karol_Daniela",
+								"api",
+								"contacto.php"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Crear mensaje",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"nombre\": \"Ana Pérez\",\r\n  \"email\": \"ana@mail.com\",\r\n  \"asunto\": \"Problema con pedido\",\r\n  \"mensaje\": \"No recibí mi pedido\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost/AA2_Martinez_Moreno_Karol_Daniela/api/contacto.php",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"AA2_Martinez_Moreno_Karol_Daniela",
+								"api",
+								"contacto.php"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Eliminar mensaje ",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost/AA2_Martinez_Moreno_Karol_Daniela/api/contacto.php?id=2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"AA2_Martinez_Moreno_Karol_Daniela",
+								"api",
+								"contacto.php"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Log_evento",
+			"item": [
+				{
+					"name": "Listar Logs",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost/AA2_Martinez_Moreno_Karol_Daniela/api/log_evento.php",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"AA2_Martinez_Moreno_Karol_Daniela",
+								"api",
+								"log_evento.php"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Registro",
+			"item": [
+				{
+					"name": "Registrar un nuevo cliente",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"nombre\": \"Juan Pérez\",\r\n  \"email\": \"juanperez@mail.com\",\r\n  \"password\": \"12345678\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost/AA2_Martinez_Moreno_Karol_Daniela/api/registro.php",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"AA2_Martinez_Moreno_Karol_Daniela",
+								"api",
+								"registro.php"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "id",
+			"value": "1"
+		},
+		{
+			"key": "base_url",
+			"value": "https://template.postman-echo.com"
+		},
+		{
+			"key": "token",
+			"value": "",
+			"type": "default"
+		}
+	]
+}

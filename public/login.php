@@ -23,10 +23,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // 🔑 Comparación en texto plano
         if ($password === $user['password']) {
-            // Guardar sesión
-            $_SESSION['id_usuario'] = $user['id_usuario'];
-            $_SESSION['nombre_usuario'] = $user['nombre'];
-            $_SESSION['rol'] = $user['rol'];
+
+    // 🔑 CAMBIO CLAVE: Usa password_verify() para comparar el hash
+
+ //if (password_verify($password, $user['password'])) {
+
+
+
+            // Guardar sesión según rol
+            // CAMBIO: Usa strtolower() para una comparación segura
+            if (strtolower($user['rol']) === 'administrador') {
+                $_SESSION['admin_id'] = $user['id_usuario'];
+                $_SESSION['admin_nombre'] = $user['nombre'];
+                $_SESSION['rol'] = 'Administrador';
+                $redirect = '../public/panel_admin.php';
+            } elseif (strtolower($user['rol']) === 'cliente') {
+                $_SESSION['id_usuario'] = $user['id_usuario'];
+                $_SESSION['nombre'] = $user['nombre'];
+                $_SESSION['rol'] = 'Cliente';
+                $redirect = '../public/panel_cliente.php';
+            } else {
+                // Si el rol no coincide con "administrador" o "cliente", redirigir a la página principal
+                $redirect = '../public/index.php';
+            }
 
             // Registrar log
             $stmt2 = $conn->prepare("INSERT INTO log_evento 
@@ -35,17 +54,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt2->bind_param("is", $user['id_usuario'], $user['nombre']);
             $stmt2->execute();
 
-            // 🚦 Redirigir según rol
-            if ($user['rol'] === 'Administrador') {
-                header("Location: ../public/panel_admin.php");
-                exit;
-            } elseif ($user['rol'] === 'Cliente') {
-                header("Location: ../public/panel_cliente.php");
-                exit;
-            } else {
-                header("Location: ../public/index.php"); 
-                exit;
-            }
+            // Redirigir
+            header("Location: $redirect");
+            exit;
 
         } else {
             $msg = "Contraseña incorrecta.";
@@ -131,6 +142,3 @@ button:hover {
 </div>
 </body>
 </html>
-
-
-

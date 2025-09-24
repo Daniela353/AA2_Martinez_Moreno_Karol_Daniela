@@ -80,6 +80,33 @@ header { background-color: #ffb6c1; color: white; text-align: center; padding: 1
 #galeria { display: flex; align-items: center; justify-content: center; gap: 1rem; margin-bottom: 1rem; }
 #galeria button { background: #ff69b4; color: white; border: none; border-radius: 50%; width: 35px; height: 35px; font-size: 1.2rem; cursor: pointer; display: flex; align-items: center; justify-content: center; }
 #fotoActual { max-width: 80%; border-radius: 10px; }
+
+/* Estilos para el contenedor de los modales */
+.modal-content {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 15px;
+    /* Define un tamaño máximo para todos los modales */
+    max-width: 600px; 
+    width: 90%;
+    /* Centra el contenido */
+    text-align: center;
+    position: relative;
+    /* Asegura que el modal no sea demasiado alto */
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+/* Estilos para las imágenes dentro de los modales */
+.modal-content img {
+    /* Establece un tamaño fijo para el contenedor de la imagen */
+    max-height: 300px; /* Por ejemplo, 300px de altura máxima */
+    width: 100%;
+    /* Esto es lo más importante: object-fit */
+    object-fit: contain; /* Escala la imagen para que quepa completamente sin ser cortada */
+    border-radius: 10px;
+}
+
 </style>
 </head>
 <body>
